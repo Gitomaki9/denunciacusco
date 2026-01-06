@@ -196,6 +196,26 @@
     tipoSelect.addEventListener("change", function(){
       otroInput.style.display = (this.value==="otro") ? "block":"none";
     });
+     <!-- Scripts EXTERNOS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Scripts MODULARES (type="module" es clave) -->
+  <script type="module">
+    // Importar solo lo necesario para esta página
+    import { inicializarFormularioDenuncia } from '../js/formulario-denuncia.js'
+    import { cerrarSesion } from '../js/auth.js'
+    
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Inicializar formulario
+      await inicializarFormularioDenuncia()
+      
+      // Configurar logout (si el botón existe)
+      const logoutBtn = document.getElementById('logoutBtn')
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', cerrarSesion)
+      }
+    })
   </script>
 </body>
 </html>
