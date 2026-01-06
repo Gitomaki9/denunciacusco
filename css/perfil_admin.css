@@ -1,0 +1,199 @@
+/* ============================================= */
+/* PERFIL ADMINISTRADOR - CUSCO REPORTA          */
+/* ============================================= */
+
+/* ====== CONFIGURACIÓN BASE (FIJA) ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Bloquea el scroll del navegador */
+}
+
+/* ======= TOPBAR ======= */
+.topbar {
+    background-color: #ffffff;
+    height: 70px;
+    min-height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+.topbar__logo img { height: 40px; }
+.topbar__menu { display: flex; gap: 25px; }
+.topbar__menu a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+.topbar__menu a:hover { color: #8b1a1a; }
+
+/* ======= CONTENEDOR DIVIDIDO ======= */
+.container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ======= SIDEBAR (GUINDA INSTITUCIONAL) ======= */
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+    background-color: #8b1a1a;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar__user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px !important;
+}
+
+.sidebar__avatar {
+    width: 50px; height: 50px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white; border-radius: 12px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px;
+}
+
+.sidebar__info h3 { font-size: 16px; color: #ffffff; font-weight: 700; }
+.sidebar__info p { font-size: 12px; color: rgba(255, 255, 255, 0.8); }
+
+.sidebar__menu { list-style: none; flex-grow: 1; }
+.sidebar__menu li { margin-bottom: 8px; }
+.sidebar__menu a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    display: flex; align-items: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+.sidebar__menu a i { color: #ffffff; font-size: 18px; margin-right: 12px; }
+.sidebar__menu a:hover, .sidebar__menu a.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.logout-btn {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; transition: all 0.3s;
+    margin-top: auto;
+}
+.logout-btn:hover { background-color: #ffffff; color: #8b1a1a; }
+
+/* ======= CONTENIDO PRINCIPAL (PERFIL) ======= */
+.main-content {
+    flex: 1;
+    padding: 50px;
+    overflow-y: auto;
+    background-image: radial-gradient(#e0e0e0 0.5px, transparent 0.5px);
+    background-size: 20px 20px;
+}
+
+.main-content h1 {
+    font-size: 2rem;
+    color: #222;
+    font-weight: 800;
+    margin-bottom: 30px;
+    border-left: 6px solid #8b1a1a;
+    padding-left: 20px;
+}
+
+/* Contenedores de Información (Cards) */
+.perfil-container, .admin-resumen > div {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* Detalle de Texto en Perfil */
+.perfil-container p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-container p strong {
+    color: #8b1a1a;
+    width: 100px;
+    display: inline-block;
+}
+
+/* Resumen Estadístico */
+.admin-resumen h2 {
+    font-size: 1.4rem;
+    color: #222;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-resumen p {
+    font-size: 1.1rem;
+    padding: 15px;
+    border-bottom: 1px solid #f0f2f5;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-resumen p strong {
+    color: #333;
+}
+
+.admin-resumen p:last-child {
+    border-bottom: none;
+}
+
+/* Animación suave al cargar */
+.main-content > * {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content { padding: 20px; }
+    .perfil-container div { flex-direction: column; text-align: center; }
+}

@@ -1,0 +1,177 @@
+/* =========================
+   RESET Y BASE
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+}
+
+/* ======= NAVBAR ======= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background-color: #e0e0e0; /* Gris claro de la imagen */
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar__logo {
+  height: 45px;
+}
+
+.navbar__menu {
+  display: flex;
+  gap: 25px;
+}
+
+.navbar__menu a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ======= ESTRUCTURA MAIN ======= */
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 5%;
+  gap: 50px; /* Espacio entre bloque rojo e info derecha */
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* ======= BLOQUE HERO (ROJO) ======= */
+.hero {
+  flex: 1;
+  background: linear-gradient(to bottom right, #b32020, #8b1a1a);
+  border-radius: 15px;
+  padding: 50px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  min-height: 450px;
+}
+
+.hero__text {
+  flex: 1;
+  text-align: center;
+}
+
+.hero__text h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.hero__text p {
+  font-size: 15px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.hero__btn {
+  display: inline-block;
+  background: white;
+  color: #b32020;
+  padding: 10px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.hero__img {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero__img img {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* ======= SECCIÓN DERECHA (FEATURES) ======= */
+.features {
+  flex: 1;
+}
+
+.features h2 {
+  text-align: right; /* Alineado a la derecha como la imagen */
+  color: #631919;
+  font-size: 32px;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+/* Grilla para 2 arriba y 1 abajo */
+.features__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.feature {
+  background: white;
+  padding: 25px 15px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  position: relative;
+  border-left: 6px solid #631919; /* Borde oscuro lateral */
+}
+
+/* Centrar la tercera tarjeta (Impacto real) */
+.feature:nth-child(3) {
+  grid-column: 1 / span 2;
+  justify-self: center;
+  width: 55%;
+}
+
+.feature img {
+  width: 35px;
+  margin-bottom: 15px;
+}
+
+.feature h3 {
+  color: #b32020;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.feature p {
+  color: #555;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 1100px) {
+  .main {
+    flex-direction: column;
+    align-items: center;
+  }
+  .feature:nth-child(3) {
+    width: 100%;
+  }
+  .features h2 {
+    text-align: center;
+  }
+}

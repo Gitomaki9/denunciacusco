@@ -1,0 +1,49 @@
+/* Estilos extraídos de Registro_Exitoso.html */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #7a0000, #500000);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+.card {
+  background: #fff;
+  color: #333;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  animation: fadeIn 0.8s ease;
+}
+.card img {
+  height: 60px;
+  margin-bottom: 16px;
+}
+h1 {
+  color: #7a0000;
+  margin-bottom: 10px;
+}
+p {
+  color: #555;
+  margin-bottom: 24px;
+}
+.btn {
+  background: #7a0000;
+  color: white;
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.btn:hover {
+  background: #a00000;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

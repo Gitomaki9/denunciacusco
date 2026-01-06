@@ -1,0 +1,245 @@
+/* ============================================= */
+/* MAPA DE INCIDENCIAS ADMIN - CUSCO REPORTA     */
+/* ============================================= */
+
+/* ====== CONFIGURACIÓN BASE (FIJA) ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Bloquea scroll global */
+}
+
+/* ======= TOPBAR (CONSERVADO) ======= */
+.topbar {
+    background-color: #ffffff;
+    height: 70px;
+    min-height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 1000;
+}
+
+.topbar__logo img { height: 40px; }
+.topbar__menu { display: flex; gap: 25px; }
+.topbar__menu a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+.topbar__menu a:hover { color: #8b1a1a; }
+
+/* ======= CONTENEDOR PRINCIPAL ======= */
+.container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ======= SIDEBAR (GUINDA - CONSERVADO) ======= */
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+    background-color: #8b1a1a;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar__user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px !important;
+}
+
+.sidebar__avatar {
+    width: 50px; height: 50px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white; border-radius: 12px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px;
+}
+
+.sidebar__info h3 { font-size: 16px; color: #ffffff; font-weight: 700; }
+.sidebar__info p { font-size: 12px; color: rgba(255, 255, 255, 0.8); }
+
+.sidebar__menu { list-style: none; flex-grow: 1; }
+.sidebar__menu li { margin-bottom: 8px; }
+.sidebar__menu a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    display: flex; align-items: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+.sidebar__menu a i { color: #ffffff; font-size: 18px; margin-right: 12px; }
+.sidebar__menu a:hover, .sidebar__menu a.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.logout-btn {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; transition: all 0.3s;
+    margin-top: auto;
+}
+.logout-btn:hover { background-color: #ffffff; color: #8b1a1a; }
+
+/* ======= CONTENIDO DEL MAPA ======= */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-image: radial-gradient(#e0e0e0 0.5px, transparent 0.5px);
+    background-size: 20px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content h1 {
+    font-size: 1.8rem;
+    color: #222;
+    font-weight: 800;
+    margin-bottom: 20px;
+    border-left: 5px solid #8b1a1a;
+    padding-left: 15px;
+}
+
+/* Layout del Mapa y Panel lateral */
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    flex: 1; /* Para que el mapa use el espacio restante */
+    min-height: 500px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* El mapa debe llenar su contenedor */
+#map {
+    flex: 1;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+
+/* Filtros y Detalle */
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filters label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #777;
+    text-transform: uppercase;
+}
+
+.filters select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+.btn {
+    background-color: #8b1a1a;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn:hover { background-color: #a52323; }
+
+/* Leyenda */
+.legend {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend div { display: flex; align-items: center; gap: 10px; }
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.red { background-color: #ff4d4d; }
+.yellow { background-color: #ffcc00; }
+.green { background-color: #2ecc71; }
+
+/* Detalle seleccionado */
+#detalle {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#detalle div {
+    font-size: 13px;
+    color: #444;
+}
+
+#detalle b {
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    #map { min-height: 400px; }
+}

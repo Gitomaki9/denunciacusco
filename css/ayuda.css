@@ -1,0 +1,164 @@
+/* ============================================= */
+/* ESTILOS PARA LA PÁGINA "AYUDA"               */
+/* ============================================= */
+
+/* ====== RESET Y TIPOGRAFÍA ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif; /* Unificado */
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* ======= NAVBAR (IDÉNTICA A INDEX) ======= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background-color: #e0e0e0; 
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar__logo {
+  height: 45px;
+  object-fit: contain;
+}
+
+.navbar__menu {
+  display: flex;
+  gap: 25px;
+}
+
+.navbar__menu a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ======= CONTENIDO AYUDA ======= */
+.main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 5%;
+}
+
+.main h1 {
+  color: #8B1E1E; /* Rojo sobrio */
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Secciones de ayuda */
+.help-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border-left: 6px solid #8B1E1E; /* Coherencia con Sobre Nosotros */
+}
+
+.help-section h2 {
+  color: #631919;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.help-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.help-section a {
+  color: #8B1E1E;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.help-section a:hover {
+  text-decoration: underline;
+  color: #b71c1c;
+}
+
+/* ======= ACORDEÓN FAQ ======= */
+.faq-item {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+}
+
+.faq-item h3 {
+  font-size: 1.1rem;
+  color: #444;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s;
+}
+
+.faq-item h3:hover {
+  color: #8B1E1E;
+}
+
+.faq-item h3::after {
+  content: '+';
+  font-size: 1.5rem;
+  color: #8B1E1E;
+  transition: transform .3s;
+}
+
+.faq-item.active h3::after {
+  content: '−';
+  transform: rotate(180deg);
+}
+
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  padding-top: 0;
+}
+
+.faq-item.active .faq-content {
+  max-height: 500px; /* Ajusta según el texto */
+  padding-top: 15px;
+}
+
+.faq-content p {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* REGLAS VERTICALES (INFO INFERIOR) */
+.section-vertical, .features-column, .feature {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  text-align: left !important;
+  margin-bottom: 20px;
+}
+
+.feature img {
+  margin-bottom: 10px;
+}

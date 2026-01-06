@@ -1,5 +1,5 @@
 /* ============================================= */
-/* TOPBAR Y SIDEBAR (CONSERVADOS)                */
+/* TOPBAR Y SIDEBAR (IDÉNTICOS A TU CÓDIGO)      */
 /* ============================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body { background-color: #f0f2f5; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -16,7 +16,7 @@ body { background-color: #f0f2f5; display: flex; flex-direction: column; height:
 .container { display: flex; flex: 1; overflow: hidden; }
 
 .sidebar {
-  width: 280px; background-color: #8b1a1a; padding: 30px 20px;
+  width: 280px; background-color: #8b1a1a; border-right: none; padding: 30px 20px;
   display: flex; flex-direction: column;
 }
 .sidebar__user {
@@ -36,7 +36,7 @@ body { background-color: #f0f2f5; display: flex; flex-direction: column; height:
   text-decoration: none; color: rgba(255, 255, 255, 0.9); font-weight: 500;
   display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; transition: all 0.3s;
 }
-.sidebar__menu a i { color: #ffffff; font-size: 18px; width: 25px; }
+.sidebar__menu a i { color: #ffffff; font-size: 18px; }
 .sidebar__menu a:hover, .sidebar__menu a.active { background-color: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
 .logout-btn {
@@ -46,82 +46,79 @@ body { background-color: #f0f2f5; display: flex; flex-direction: column; height:
 }
 .logout-btn:hover { background-color: #ffffff; color: #8b1a1a; }
 
-/* ======= CONTENIDO PRINCIPAL (NOTIFICACIONES) ======= */
+/* ======= CONTENIDO PRINCIPAL (DENUNCIA) ======= */
 .main-content {
   flex: 1; padding: 40px; overflow-y: auto;
   background-image: radial-gradient(#d1d1d1 0.6px, transparent 0.6px); background-size: 25px 25px;
 }
 
 .main-content h1 {
-  font-size: 2rem; color: #222; font-weight: 800;
+  font-size: 2rem; color: #222; font-weight: 800; margin-bottom: 25px;
+  border-left: 5px solid #8b1a1a; padding-left: 15px;
 }
 
-.notifications-container {
-  margin-top: 30px; background: white; border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden;
-  max-width: 900px;
+.formulario {
+  background: white; padding: 35px; border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.notification-item {
-  padding: 25px 30px; border-bottom: 1px solid #f1f5f9;
-  transition: all 0.3s ease; display: flex; flex-direction: column; gap: 10px;
+.fila { display: flex; gap: 30px; }
+.columna { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+
+/* Estilo de Campos e Inputs */
+.campo { display: flex; flex-direction: column; gap: 8px; }
+.campo label { font-size: 0.85rem; font-weight: 700; color: #555; text-transform: uppercase; }
+
+input[type="text"], select, textarea {
+  width: 100%; padding: 12px 15px; border: 2px solid #edf2f7; border-radius: 10px;
+  background-color: #f8fafc; font-size: 14px; transition: 0.3s;
 }
 
-.notification-item:last-child { border-bottom: none; }
-
-/* Encabezado de la notificación (Título y Fecha) */
-.notif-header {
-  display: flex; justify-content: space-between; align-items: center;
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: #8b1a1a; background-color: #fff;
 }
 
-.notif-header h3 {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 1.1rem; font-weight: 700;
+textarea { height: 100px; resize: none; }
+
+/* MAPA */
+#mapContainer {
+  height: 250px; width: 100%; border-radius: 12px;
+  border: 2px solid #edf2f7; z-index: 1;
 }
 
-/* Colores por tipo de notificación */
-.notif-header h3.status-update { color: #8b1a1a; }
-.notif-header h3.status-success { color: #16a34a; }
-.notif-header h3.status-info { color: #64748b; }
+/* BOTONES */
+.btn-principal {
+  background: #8b1a1a; color: white; border: none; padding: 15px 40px;
+  border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+.btn-principal:hover { background: #631212; transform: translateY(-2px); }
 
-.notif-header span {
-  font-size: 0.85rem; color: #94a3b8; font-weight: 500;
+.btn-secundario {
+  background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+  padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s;
+}
+.btn-secundario:hover { background: #e2e8f0; color: #1e293b; }
+
+/* ======= MODALES ======= */
+.modal {
+  display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+  width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
 }
 
-/* Texto del mensaje */
-.notification-item p {
-  color: #475569; font-size: 0.95rem; line-height: 1.6;
-  max-width: 80%;
+.modal-content {
+  background: white; margin: 10% auto; padding: 30px;
+  width: 90%; max-width: 400px; border-radius: 20px; position: relative;
 }
 
-/* Botones y estados de lectura */
-.notif-footer {
-  display: flex; justify-content: flex-end; margin-top: 5px;
+.close-modal {
+  position: absolute; right: 20px; top: 15px; font-size: 24px;
+  cursor: pointer; color: #999;
 }
 
-.btn-mark-read {
-  background-color: #8b1a1a; color: white; border: none;
-  padding: 8px 18px; border-radius: 8px; font-weight: 600;
-  font-size: 0.85rem; cursor: pointer; transition: 0.3s;
-}
-
-.btn-mark-read:hover {
-  background-color: #631212; transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 26, 26, 0.2);
-}
-
-.read-status {
-  color: #16a34a; font-weight: 700; font-size: 0.9rem;
-  display: flex; align-items: center; gap: 5px;
-}
-
-/* Estilo para notificaciones leídas (Fondo grisáceo) */
-.notification-item.read {
-  background-color: #f8fafc;
-}
+.modal-content h3 { color: #8b1a1a; margin-bottom: 20px; font-weight: 700; }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .notif-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-  .notification-item p { max-width: 100%; }
+@media (max-width: 1024px) {
+  .fila { flex-direction: column; }
 }
