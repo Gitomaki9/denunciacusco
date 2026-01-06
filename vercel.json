@@ -1,34 +1,9 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
   "rewrites": [
-    
-    {
-      "source": "/(css|js|assents)/(.*)",
-      "destination": "/$1/$2"
-    },
-    
-   
     {
       "source": "/",
       "destination": "/html/index.html"
     },
-    
-    
-    {
-      "source": "/iniciar-sesion",
-      "destination": "/html/iniciar-sesion.html"
-    },
-    {
-      "source": "/sobre_nosotros", 
-      "destination": "/html/sobre_nosotros.html"
-    },
-    {
-      "source": "/Mapalncidencias-Ciudadano",
-      "destination": "/html/Mapalncidencias(Ciudadano).html"
-    },
-    
-    
     {
       "source": "/:page",
       "destination": "/html/:page.html"
