@@ -6,17 +6,33 @@
   <title>Cusco Reporta – Sobre Nosotros</title>
   <link rel="stylesheet" href="../css/sobre_nosotros.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Forzar todo vertical */
+    .section-vertical, .features-column, .feature {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      text-align: left !important;
+      margin-bottom: 20px;
+      float: none !important;
+    }
+
+    .feature img {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
   <header class="navbar">
     <div class="navbar__left">
-      <img href="../css/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
+      <img src="../assents/images/MTC.png" alt="Logo MTC" class="navbar__logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
     </div>
 
     <nav class="navbar__menu">
-      <a href="/">Inicio</a>
+      <a href="/index">Inicio</a>
       <a href="/registrar_tu_denuncia">Registra tu denuncia</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/iniciar-sesion">Iniciar Sesión</a>
@@ -66,19 +82,19 @@
       <div class="features-column">
 
         <div class="feature feature--red">
-          <img href="../css/icons/fast.svg" alt="">
+          <img src="../assents/icons/fast.svg" alt="">
           <h3>Rápido y sencillo</h3>
           <p>Reporta en minutos desde tu celular o computadora.</p>
         </div>
 
         <div class="feature feature--red">
-          <img href="../css/icons/shield.svg" alt="">
+          <img src="../assents/icons/shield.svg" alt="">
           <h3>Seguro</h3>
           <p>Tus datos están protegidos o puedes reportar de forma anónima.</p>
         </div>
 
         <div class="feature feature--red">
-          <img href="../css/icons/impact.svg" alt="">
+          <img src="../assents/icons/impact.svg" alt="">
           <h3>Impacto real</h3>
           <p>Tu aporte ayuda a mejorar la seguridad vial de la ciudad.</p>
         </div>
@@ -88,6 +104,6 @@
 
   </main>
 
-  <script href="../css/main.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>

@@ -4,129 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Usuario - Cusco Reporta</title>
-  
   <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/panel.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <!-- ====== NAVBAR SUPERIOR ====== -->
   <header class="topbar">
     <div class="topbar__logo">
-      <img href="../css/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
     </div>
     <nav class="topbar__menu">
-      <a href="/">Inicio</a>
+      <a href="/index">Inicio</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
   </header>
 
+  <!-- ====== CONTENEDOR PRINCIPAL ====== -->
   <div class="container">
-    <aside class="sidebar">
-      <div class="sidebar__user">
+    <!-- ====== SIDEBAR IZQUIERDO ====== -->
+    <aside class="sidebar" style="display: flex; flex-direction: column; justify-content: flex-start;">
+      <div class="sidebar__user" style="margin-bottom: 10px;">
         <div class="sidebar__avatar">
           <i class="fa-solid fa-user"></i>
         </div>
         <div class="sidebar__info">
-          <h3 id="sbUsername">—</h3>
-          <p id="sbRol">—</p>
+          <h3>Jose Pérez</h3>
+          <p>Ciudadano</p>
         </div>
       </div>
 
-      <ul class="sidebar__menu">
-        <li>
-          <a href="/perfil_usuario"><i class="fa-solid fa-id-card"></i><span>Ver perfil</span></a>
+      <!-- Menú del usuario -->
+      <ul class="sidebar__menu" style="margin-top: 0; padding-top: 0; list-style: none;">
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/perfil_usuario"><i class="fa-solid fa-id-card" style="width: 20px;"></i><span style="margin-left:8px;">Ver perfil</span></a>
         </li>
-        <li>
-          <a href="/ReportarIncidencia"><i class="fa-solid fa-pen-to-square"></i><span>Reportar</span></a>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/ReportarIncidencia"><i class="fa-solid fa-pen-to-square" style="width: 20px;"></i><span style="margin-left:8px;">Reportar</span></a>
         </li>
-        <li>
-          <a href="/registrar_Denuncia"><i class="fa-solid fa-triangle-exclamation"></i><span>Denunciar</span></a>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/registrar_Denuncia"><i class="fa-solid fa-triangle-exclamation" style="width: 20px;"></i><span style="margin-left:8px;">Denunciar</span></a>
         </li>
-        <li>
-          <a href="/lista_incidencias"><i class="fa-solid fa-list-check"></i><span>Estado de reportes</span></a>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/lista_incidencias"><i class="fa-solid fa-list-check" style="width: 20px;"></i><span style="margin-left:8px;">Estado de reportes</span></a>
         </li>
-        <li>
-          <a href="/MapaIncidiencias(Ciudadano)"><i class="fa-solid fa-map-location-dot"></i><span>Mapa de incidencias</span></a>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/MapaIncidiencias(Ciudadano)"><i class="fa-solid fa-map-location-dot" style="width: 20px;"></i><span style="margin-left:8px;">Mapa de incidencias</span></a>
         </li>
-        <li>
-          <a href="/notificaciones"><i class="fa-solid fa-bell"></i><span>Notificaciones</span></a>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="/notificaciones"><i class="fa-solid fa-bell" style="width: 20px;"></i><span style="margin-left:8px;">Notificaciones</span></a>
         </li>
       </ul>
 
-      <button class="logout-btn" id="logoutBtn">
+      <button class="logout-btn" id="logoutBtn" style="margin-top: auto;">
         <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
       </button>
     </aside>
 
+    <!-- ====== CONTENIDO PRINCIPAL ====== -->
     <main class="main-content">
-      <div class="welcome-section">
-        <h1>¡Bienvenido, <span id="nombrePantalla">Usuario</span>!</h1>
-        <p class="subtitle">
-          Selecciona una opción del menú lateral para comenzar a gestionar tus reportes.
+      <div>
+        <h1>¡Bienvenido, Jose Pérez!</h1>
+        <p style="color:#555; margin-top:10px;">
+          Selecciona una opción del menú lateral para comenzar.
         </p>
-
-        <div id="pillSession" style="display:inline-flex; align-items:center; gap:8px; padding:8px 15px; border-radius:20px; background:#e8f5e9; color:#2e7d32; font-weight:bold; margin-top:20px; font-size:0.9rem;">
-          <i class="fa-solid fa-circle-check"></i>
-          <span>Sesión Segura Activa</span>
-        </div>
       </div>
     </main>
   </div>
 
+  <!-- ====== SCRIPT ====== -->
   <script>
-    // Función para obtener datos del usuario logueado
-    function getUserFromStorage() {
-      const userRaw = localStorage.getItem("user");
-      const token = localStorage.getItem("token");
-      if (!userRaw || !token) return null;
-      try { return JSON.parse(userRaw); } catch { return null; }
-    }
-
-    // Traducir ID de rol a texto
-    function rolLabel(rol_id) {
-      return (Number(rol_id) === 2) ? "Administrador" : "Ciudadano";
-    }
-
-    // Proteger la página: si no hay sesión, rebota al login
-    function requireAuth() {
-      const u = getUserFromStorage();
-      if (!u) {
-        window.location.href = "iniciar-sesion.html";
-        return null;
-      }
-      return u;
-    }
-
-    // Poblar la interfaz con datos reales de la BD
-    function setSidebarUser(u) {
-      const sbUsername = document.getElementById("sbUsername");
-      const sbRol = document.getElementById("sbRol");
-      const nombrePantalla = document.getElementById("nombrePantalla");
-
-      const nombreMostrado = u.nombre_completo || u.username || "Usuario";
-      sbUsername.textContent = u.username || nombreMostrado;
-      sbRol.textContent = rolLabel(u.rol_id);
-      nombrePantalla.textContent = nombreMostrado;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const u = requireAuth();
-      if (!u) return;
-
-      setSidebarUser(u);
-
-      // Lógica de cerrar sesión
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          window.location.href = "index.html";
-        }
-      });
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      window.location.href = "index.html";
     });
   </script>
-  
-  <script href="../css/panel.js"></script>
 </body>
 </html>

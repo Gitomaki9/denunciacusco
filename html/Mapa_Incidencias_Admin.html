@@ -21,16 +21,110 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-  <link rel="stylesheet" href="../css/Mapa_Incidencias_Admin.css" />
+
+  <style>
+    :root{
+      --rojo:#dc2626; 
+      --amarillo:#f59e0b; 
+      --verde:#16a34a;
+      --bord:#e5e7eb; 
+      --gris:#f8fafc; 
+      --ink:#0f172a;
+      --radius:12px; 
+      --shadow:0 10px 24px rgba(0,0,0,.08);
+      --burgundy:#7a0000; 
+      --burgundy-2:#8b1e1e;
+    }
+
+    body{
+      margin:0;
+      font:16px/1.5 system-ui,Segoe UI,Roboto,Arial;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      background:#f8fafc;
+      color:#111;
+    }
+
+    /* ====== Topbar ====== */
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 20px;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.1);
+      z-index:1000;
+    }
+    .topbar__logo img{height:40px;}
+    .topbar__menu a{
+      margin-left:20px;
+      text-decoration:none;
+      color:#111;
+      font-weight:600;
+    }
+
+    /* Contenedor principal con sidebar + main */
+    .container{
+      display:flex;
+      flex:1;
+      min-height:0;
+    }
+
+    /* Sidebar estilo panel admin */
+    .sidebar{
+      width:250px;
+      background: var(--burgundy);
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      color:white;
+    }
+    .sidebar__user{display:flex; gap:12px; align-items:center; margin-bottom:20px;}
+    .sidebar__avatar i{font-size:40px; color:white;}
+    .sidebar__info h3{margin:0; font-size:1.2rem;}
+    .sidebar__info p{margin:0; font-size:.9rem; color:#f0f0f0;}
+    .sidebar__menu{list-style:none; padding:0; margin-top:20px; display:flex; flex-direction:column; gap:12px;}
+    .sidebar__menu a{text-decoration:none; color:white; font-weight:600; display:flex; align-items:center;}
+    .sidebar__menu a i{width:20px;}
+    .sidebar__menu a.active{color:var(--amarillo);}
+    .sidebar__menu a:hover{color:var(--amarillo);}
+    .logout-btn{margin-top:auto; padding:10px; background:var(--rojo); color:white; border:none; border-radius:10px; cursor:pointer;}
+
+    /* Main content a la derecha */
+    main.main-content{
+      flex:1; 
+      padding:20px; 
+      overflow:auto; 
+      background:white;
+      color:#111;
+    }
+    main h1{color:var(--burgundy); font-weight:900; font-size:2.2rem;}
+
+    /* Layout mapa + panel lateral */
+    .layout{display:grid;gap:16px;grid-template-columns:2fr 1fr;}
+    .card{background:#fff;border:1px solid var(--bord);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;}
+    .filters{display:flex;flex-direction:column;gap:10px;align-items:start;}
+    .filters label{font-weight:700;font-size:.92rem;}
+    select,.btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;}
+    .btn{background:var(--burgundy);color:#fff;font-weight:800;}
+    .btn:hover{background:var(--burgundy-2);}
+    #map{height:60vh; border-radius:10px; border:1px solid var(--bord);} /* achicado un poco */
+    .legend{background:#fff;border:1px solid var(--bord);border-radius:10px;padding:8px 10px;line-height:18px;box-shadow:var(--shadow)}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+    .dot.red{background:var(--rojo)} .dot.yellow{background:var(--amarillo)} .dot.green{background:var(--verde)}
+    .chip{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:800;font-size:.85rem;color:#fff}
+    .chip.red{background:var(--rojo)} .chip.yellow{background:var(--amarillo);color:#111} .chip.green{background:var(--verde)}
+  </style>
 </head>
 <body>
   <!-- ====== TOPBAR ====== -->
   <header class="topbar">
     <div class="topbar__logo">
-      <img href="../css/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
     </div>
     <nav class="topbar__menu">
-      <a href="/">Inicio</a>
+      <a href="/index">Inicio</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
@@ -108,6 +202,98 @@
     </main>
   </div>
 
-  <script href="../css/Mapa_Incidencias_Admin.js"></script>
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      window.location.href = "index.html";
+    });
+
+    // ===================== Datos simulados =====================
+    const INCIDENTES = [
+      { id:1052, fecha:'2024-04-20', estado:'Recibido',     tipo:'Accidente',           dir:'Av. El Sol 500',     lat:-13.5185, lng:-71.9769 },
+      { id:1048, fecha:'2024-04-18', estado:'En proceso',   tipo:'Semáforo dañado',     dir:'Calle Pumacurco 210', lat:-13.5176, lng:-71.9740 },
+      { id:1034, fecha:'2024-04-15', estado:'Solucionado',  tipo:'Mal estacionamiento', dir:'Jirón Santiago 320',  lat:-13.5240, lng:-71.9795 },
+      { id:1027, fecha:'2024-04-13', estado:'Solucionado',  tipo:'Obstrucción de vía',  dir:'Calle Mantas 120',    lat:-13.5189, lng:-71.9799 },
+      { id:1013, fecha:'2024-04-10', estado:'En proceso',   tipo:'Señal caída',         dir:'Av. Garcilaso 1204',  lat:-13.5226, lng:-71.9678 },
+      { id:1009, fecha:'2024-04-08', estado:'Recibido',     tipo:'Accidente',           dir:'Calle Hospital 50',   lat:-13.5153, lng:-71.9752 },
+      { id:1003, fecha:'2024-04-06', estado:'Recibido',     tipo:'Congestión',          dir:'Av. de la Cultura',   lat:-13.5220, lng:-71.9588 },
+      { id:1001, fecha:'2024-04-05', estado:'Solucionado',  tipo:'Hueco en vía',        dir:'Urb. Ttio D-12',      lat:-13.5270, lng:-71.9487 }
+    ];
+
+    const $ = (s,r=document)=>r.querySelector(s);
+    const colorByEstado = (e)=> e==='Recibido' ? '#dc2626' : e==='En proceso' ? '#f59e0b' : '#16a34a';
+    const chip = (e)=> {
+      const cls = e==='Recibido' ? 'red' : e==='En proceso' ? 'yellow' : 'green';
+      return `<span class="chip ${cls}">${e}</span>`;
+    };
+
+    function updateCounters(list){
+      $('#c-reci').textContent = list.filter(x=>x.estado==='Recibido').length;
+      $('#c-proc').textContent = list.filter(x=>x.estado==='En proceso').length;
+      $('#c-solu').textContent = list.filter(x=>x.estado==='Solucionado').length;
+    }
+
+    function setDetalle(r){
+      $('#d-id').textContent = r ? r.id : '—';
+      $('#d-fecha').textContent = r ? r.fecha : '—';
+      $('#d-estado').innerHTML = r ? chip(r.estado) : '—';
+      $('#d-tipo').textContent = r ? r.tipo : '—';
+      $('#d-dir').textContent = r ? r.dir : '—';
+    }
+
+    // ===================== Mapa =====================
+    let map, markersLayer;
+
+    function initMap(){
+      map = L.map('map').setView([-13.518, -71.975], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+      markersLayer = L.layerGroup().addTo(map);
+    }
+
+    function renderMarkers(list){
+      markersLayer.clearLayers();
+      if(!list.length) return;
+
+      const bounds = [];
+      list.forEach(r=>{
+        const marker = L.circleMarker([r.lat, r.lng], {
+          radius: 9,
+          color: '#111',
+          weight: 1,
+          fillColor: colorByEstado(r.estado),
+          fillOpacity: .9
+        })
+        .bindPopup(`
+          <b>ID ${r.id}</b><br>
+          ${r.tipo}<br>
+          ${r.dir}<br>
+          ${chip(r.estado)} · ${r.fecha}
+        `)
+        .on('click', ()=> setDetalle(r));
+        marker.addTo(markersLayer);
+        bounds.push([r.lat, r.lng]);
+      });
+
+      if(bounds.length===1){ map.setView(bounds[0], 16); }
+      else{ map.fitBounds(bounds, { padding:[24,24] }); }
+    }
+
+    function applyFilter(){
+      const estado = $('#fEstado').value;
+      const filtered = estado==='TODOS' ? INCIDENTES : INCIDENTES.filter(x=>x.estado===estado);
+      renderMarkers(filtered);
+      updateCounters(filtered);
+      setDetalle(filtered[0] || null);
+    }
+
+    window.addEventListener('DOMContentLoaded', ()=>{
+      initMap();
+      $('#btnAplicar').addEventListener('click', applyFilter);
+      $('#fEstado').addEventListener('change', applyFilter);
+      applyFilter();
+    });
+  </script>
 </body>
 </html>

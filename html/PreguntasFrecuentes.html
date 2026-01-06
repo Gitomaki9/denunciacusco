@@ -9,15 +9,178 @@
     <link rel="stylesheet" href="../css/styles.css" />
 
     <!-- Estilos adicionales (mínimos, para esta página) -->
-    <link rel="stylesheet" href="../css/PreguntasFrecuentes.css" />
-    
+    <style>
+      /* Layout interno para que encaje con tu sidebar/topbar */
+      .page-main {
+        display: flex;
+        gap: 24px;
+        padding: 30px;
+        align-items: flex-start;
+      }
+
+      .help-content {
+        flex: 1;
+        background: transparent;
+      }
+
+      .breadcrumb {
+        font-size: 0.95rem;
+        color: #555;
+        margin-bottom: 18px;
+      }
+
+      .help-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .help-header h2 {
+        color: #8b1919;
+        letter-spacing: 1px;
+        margin: 0;
+      }
+
+      .search-box {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .search-box input[type="search"] {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        min-width: 260px;
+      }
+
+      /* FAQ accordion (uses <details>) */
+      .faq-list {
+        margin-top: 18px;
+        display: grid;
+        gap: 12px;
+      }
+
+      details {
+        background: #fff;
+        padding: 14px 16px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+      }
+
+      summary {
+        list-style: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        color: #222;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      } /* hide default arrow */
+
+      .chevron {
+        transition: transform 0.25s ease;
+        transform-origin: 50% 50%;
+        display: inline-block;
+      }
+
+      details[open] .chevron {
+        transform: rotate(180deg);
+      }
+
+      details p {
+        margin-top: 10px;
+        color: #444;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      /* Tutorials column */
+      .right-col {
+        width: 340px;
+        min-width: 260px;
+      }
+
+      .tutorials {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      .tutorial-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .tutorial-card h4 {
+        margin: 0 0 6px;
+        font-size: 1rem;
+        color: #2c3e50;
+      }
+
+      .tutorial-card p {
+        margin: 0 0 8px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      .tutorial-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .btn-small {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: none;
+        background: #8b1919;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: #555;
+        border: 1px solid #e6e6e6;
+      }
+
+      /* responsive */
+      @media (max-width: 900px) {
+        .page-main {
+          flex-direction: column;
+          padding: 16px;
+        }
+        .right-col {
+          width: 100%;
+          order: 2;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Topbar (usa tu topbar global si existe) -->
     <div class="topbar" style="position: sticky; top: 0; z-index: 30">
       <div class="topbar__logo">
         <img
-          href="../css/images/CuscoReporta.png"
+          src="../assents/images/CuscoReporta.png"
           alt="Logo Cusco Reporta"
           style="height: 44px"
         />
@@ -369,6 +532,56 @@
       </main>
     </div>
 
-    <script href="../css/PreguntasFrecuentes.js"></script>
+    <!-- Script pequeño para búsqueda y toggles -->
+    <script>
+      // Búsqueda simple en FAQs (filtra por texto en summary y p)
+      (function () {
+        const searchInput = document.getElementById("faq-search");
+        const faqList = document.getElementById("faq-list");
+
+        function filterFAQs(term) {
+          const q = term.trim().toLowerCase();
+          const details = faqList.querySelectorAll("details");
+          details.forEach((d) => {
+            const text = (
+              d.querySelector("summary").innerText +
+              " " +
+              (d.querySelector("p")?.innerText || "")
+            ).toLowerCase();
+            if (!q || text.includes(q)) {
+              d.style.display = "";
+            } else {
+              d.style.display = "none";
+            }
+          });
+        }
+
+        searchInput.addEventListener("input", (e) =>
+          filterFAQs(e.target.value)
+        );
+        document
+          .getElementById("clear-search")
+          .addEventListener("click", () => {
+            searchInput.value = "";
+            filterFAQs("");
+            searchInput.focus();
+          });
+      })();
+
+      // Mostrar / ocultar contenido de tutoriales
+      function toggleTutorial(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.display =
+          el.style.display === "none" || el.style.display === ""
+            ? "block"
+            : "none";
+      }
+
+      // Acción ficticia: descargar guía
+      function downloadGuide() {
+        alert("Descarga simulada: aquí podrías enlazar el PDF real.");
+      }
+    </script>
   </body>
 </html>

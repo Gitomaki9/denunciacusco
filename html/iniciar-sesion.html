@@ -4,76 +4,283 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Iniciar Sesión - Cusco Reporta</title>
-  
-  <link rel="stylesheet" href="../css/iniciar-sesion.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos adicionales para el login */
+    .login-container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .login-tabs {
+      display: flex;
+      margin-bottom: 30px;
+      border-radius: 25px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+    
+    .login-tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+    }
+    
+    .login-tab.active {
+      background: #b22222;
+      color: white;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    
+    .form-group input:focus {
+      border-color: #b22222;
+      outline: none;
+    }
+    
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: #b22222;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+    
+    .btn-login:hover {
+      background: #8b0000;
+    }
+    
+    .forgot-password {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .forgot-password a {
+      color: #b22222;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+    
+    .register-prompt {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .register-prompt a {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    .confia {
+      text-align: center;
+      margin-top: 30px;
+      font-weight: 600;
+      color: #b22222;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
+  <!-- ======= HEADER ======= -->
   <header class="navbar">
     <div class="navbar__left">
-      <img href="../css/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
+      <img src="../assents/images/MTC.png" alt="Logo MTC" class="navbar__logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
     </div>
 
     <nav class="navbar__menu">
       <a href="/">Inicio</a>
       <a href="/registrar_tu_denuncia">Registra tu denuncia</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
-      <a href="/iniciar-sesion" class="active">Iniciar Sesión</a>
+      <a href="/iniciar-sesion" style="background: #b22222; color: white; padding: 8px 16px; border-radius: 20px;">Iniciar Sesión</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
   </header>
 
+  <!-- ======= FORMULARIO DE LOGIN ======= -->
   <main class="main">
-    <section class="denuncia">
-      <h1 class="login-title">INICIO DE SESIÓN</h1>
+    <div class="login-container">
+      <h1 style="text-align: center; color: #8b0000; margin-bottom: 30px;">INICIO DE SESIÓN</h1>
 
-      <div class="login-form">
-        <form id="formLogin">
-          <div class="form-group">
-            <label for="username" class="form-label">Nombre de Usuario o Email</label>
-            <input type="text" id="username" name="username" class="form-input" placeholder="usuario@ejemplo.com" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
-          </div>
-          
-          <button type="submit" class="submit-btn">🔐 Iniciar Sesión</button>
-          
-          <div id="errorMessage" style="color: #ff0000; font-weight: bold; margin-top: 10px; text-align: center;"></div>
-        </form>
+      <!-- Tabs Login/Registro -->
+      <div class="login-tabs">
+        <button class="login-tab active" id="tabLogin" onclick="mostrarLogin()">Iniciar Sesión</button>
+        <button class="login-tab" id="tabRegistro" onclick="mostrarRegistro()">Registrarse</button>
       </div>
 
-      <div class="options-container">
-        <p class="intro-text">¿No tienes una cuenta?</p>
-        
-        <div class="auth-buttons">
-          <a href="registro_usuario.html" class="auth-btn auth-btn-register">
-            Registrarse
-          </a>
+      <!-- Formulario LOGIN -->
+      <form id="formLogin" style="display: block;">
+        <div class="form-group">
+          <label for="email">Correo Electrónico</label>
+          <input type="email" id="email" placeholder="tu@email.com" required>
         </div>
-      </div>
+        
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Tu contraseña" required>
+        </div>
+        
+        <button type="submit" class="btn-login">Iniciar Sesión</button>
+        
+        <div class="forgot-password">
+          <a href="/recuperar_contrasena">¿Olvidaste tu contraseña?</a>
+        </div>
+      </form>
+
+      <!-- Formulario REGISTRO (oculto inicialmente) -->
+      <form id="formRegistro" style="display: none;">
+        <div class="form-group">
+          <label for="regNombre">Nombre Completo</label>
+          <input type="text" id="regNombre" placeholder="Juan Pérez" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="regEmail">Correo Electrónico</label>
+          <input type="email" id="regEmail" placeholder="tu@email.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="regPassword">Contraseña</label>
+          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="regConfirmPassword">Confirmar Contraseña</label>
+          <input type="password" id="regConfirmPassword" placeholder="Repite tu contraseña" required>
+        </div>
+        
+        <button type="submit" class="btn-login" style="background: #4CAF50;">Crear Cuenta</button>
+        
+        <div class="register-prompt">
+          ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia Sesión</a>
+        </div>
+      </form>
 
       <p class="confia">¡CONFÍA EN NOSOTROS!</p>
-      
-      <div class="footer-links">
-        <a href="/recuperar_contrasena" class="back-link" style="margin-bottom: 10px; display: block;">¿Olvidaste tu contraseña?</a>
-        <a href="/" class="back-link">← Volver al Inicio</a>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <script href="../css/login.js"></script>
-  
   <script>
-    // Pequeña validación extra: Si ya está logueado, mandarlo al dashboard/inicio
-    document.addEventListener("DOMContentLoaded", () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        window.location.href = "index.html";
+    // Funciones para cambiar entre Login y Registro
+    function mostrarLogin() {
+      document.getElementById('formLogin').style.display = 'block';
+      document.getElementById('formRegistro').style.display = 'none';
+      document.getElementById('tabLogin').classList.add('active');
+      document.getElementById('tabRegistro').classList.remove('active');
+    }
+    
+    function mostrarRegistro() {
+      document.getElementById('formLogin').style.display = 'none';
+      document.getElementById('formRegistro').style.display = 'block';
+      document.getElementById('tabLogin').classList.remove('active');
+      document.getElementById('tabRegistro').classList.add('active');
+    }
+    
+    // Manejo del formulario de LOGIN (sin Supabase por ahora)
+    document.getElementById('formLogin').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Validación básica
+      if (!email || !password) {
+        alert('Por favor, completa todos los campos');
+        return;
       }
+      
+      // Simular login (remplazar con Supabase después)
+      alert('Login simulado. Email: ' + email + '\nImplementa Supabase para autenticación real.');
+      // Redirigir a perfil después de login
+      // window.location.href = '/perfil';
     });
+    
+    // Manejo del formulario de REGISTRO
+    document.getElementById('formRegistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('regNombre').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      
+      // Validaciones
+      if (!nombre || !email || !password || !confirmPassword) {
+        alert('Por favor, completa todos los campos');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+      
+      if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      
+      // Simular registro (remplazar con Supabase después)
+      alert('Registro simulado exitoso:\nNombre: ' + nombre + '\nEmail: ' + email + '\n\nImplementa Supabase para registro real.');
+      
+      // Después de registro, mostrar formulario de login
+      mostrarLogin();
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = '';
+    });
+    
+    // Si viene de registro exitoso, mostrar mensaje
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('registro') === 'exitoso') {
+      alert('¡Registro exitoso! Ahora inicia sesión.');
+      document.getElementById('email').value = urlParams.get('email') || '';
+    }
   </script>
+  
+  <script src="../js/main.js"></script>
 </body>
 </html>

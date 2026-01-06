@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administrador - Cusco Reporta</title>
+  <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/perfil_admin.css" />
 </head>
 <body>
   <!-- NAVBAR SUPERIOR -->
   <header class="topbar">
     <div class="topbar__logo">
-      <img href="../css/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
     </div>
     <nav class="topbar__menu">
-      <a href="/">Inicio</a>
+      <a href="/index">Inicio</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
@@ -114,6 +114,10 @@
   </div>
 
   <!-- SCRIPT DE CERRAR SESIÓN -->
-  <script href="../css/perfil_admin.js"></script>
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
