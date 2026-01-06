@@ -1,62 +1,18 @@
-/* ============================================= */
-/* ESTILOS PARA LA PÁGINA "SOBRE NOSOTROS"      */
-/* ============================================= */
-
-/* ====== RESET GENERAL ====== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif; /* Unificado con index y denuncias */
-}
+/* --------------------------------------------- */
+/*  ESTILOS PARA LA PÁGINA "SOBRE NOSOTROS"     */
+/* --------------------------------------------- */
 
 body {
+  font-family: 'Poppins', sans-serif;
   background: #f7f7f7;
-  color: #333;
+  margin: 0;
+  padding: 0;
 }
 
-/* ======= NAVBAR (IDÉNTICA A INDEX.CSS) ======= */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 5%;
-  background-color: #e0e0e0; /* El gris de tu index */
-  border-bottom: 1px solid #ccc;
-}
-
-.navbar__left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.navbar__logo {
-  height: 45px;
-  object-fit: contain;
-}
-
-.navbar__menu {
-  display: flex;
-  gap: 25px;
-}
-
-.navbar__menu a {
-  text-decoration: none;
-  color: #000;
-  font-weight: 600;
-  font-size: 14px;
-  transition: color 0.3s ease;
-}
-
-.navbar__menu a:hover {
-  color: #8b1a1a;
-}
-
-/* ===== HERO (Centrado) ===== */
+/* ===== HERO (Rojo bonito y centrado) ===== */
 .hero--red {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  /* vertical */
   align-items: center;
   text-align: center;
   padding: 60px 20px;
@@ -86,7 +42,7 @@ body {
   max-width: 1100px;
   margin: 40px auto;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row; /* horizontal */
   align-items: center;
   gap: 40px;
   background: #ffffff;
@@ -96,7 +52,7 @@ body {
 }
 
 .main section:nth-child(even) {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse; /* alterna lado de texto e imagen */
 }
 
 .main section h2 {
@@ -128,9 +84,10 @@ body {
   margin-bottom: 35px;
 }
 
+/* Tarjetas en horizontal */
 .features-column {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* horizontal */
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
@@ -152,6 +109,11 @@ body {
   transition: .2s;
 }
 
+.feature--red:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.15);
+}
+
 .feature--red img {
   width: 65px;
   margin-bottom: 12px;
@@ -163,24 +125,145 @@ body {
   margin-bottom: 10px;
 }
 
-/* ===== REGLAS DE INFO INFERIOR (Restauradas) ===== */
-.section-vertical, .features-column, .feature {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  text-align: left !important;
-  margin-bottom: 20px;
-  float: none !important;
+.feature--red p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* ====== RESET GENERAL ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ====== NAVBAR ====== */
+.navbar {
+  width: 100%;
+  background-color: #d9d9d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 50px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar__logo {
+  height: 48px;
+  object-fit: contain;
+}
+
+.navbar__menu {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.navbar__menu a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #111;
+  transition: color 0.3s ease;
+}
+
+.navbar__menu a:hover {
+  color: #b71c1c;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e5e5e5;
+  padding: 10px 40px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 40px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #000;
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #b22222;
+}
+
+/* ====== SECCIÓN PRINCIPAL ====== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.denuncia {
+  text-align: center;
+  max-width: 950px;
+  background: #fff;
+  padding: 60px 40px;
+  border-radius: 20px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.denuncia h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.denuncia p {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 50px;
+  line-height: 1.6;
 }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px;
+  }
+
+  .navbar__menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
   .main section {
-    flex-direction: column !important;
+    flex-direction: column; /* vuelve vertical en móvil */
     text-align: center;
   }
-  
-  .main section p {
-    max-width: 100%;
+
+  .features-column {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .feature {
+    width: 100%;
   }
 }
