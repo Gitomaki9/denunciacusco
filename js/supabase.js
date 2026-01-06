@@ -1,12 +1,24 @@
-// En /js/supabase.js - VERSIÓN CORREGIDA
-const SUPABASE_URL = 'https://grchvnewfkakaqfkgbzy.supabase.co';  // CON COMILLAS
-const SUPABASE_KEY = 'sb_publishable_bQZ1guTH9D2ByDwgMYGLfQ_g7bIsktc';  // CON COMILLAS
+// js/supabase.js - Configuración con TUS credenciales
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// Crear cliente de Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// TUS CREDENCIALES
+const supabaseUrl = 'https://mjxpehxsvfqjhbcyjxfz.supabase.co'
+const supabaseAnonKey = 'sb_publishable_duVjfb3TokLpuSoP2gto4Q_tkUpDoc_'
 
-// Exportar para usar en otros archivos
-window.supabaseClient = supabase;
+// Crear cliente Supabase
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-console.log('✅ Supabase configurado correctamente');
-console.log('URL:', SUPABASE_URL);
+// Exportaciones
+export { supabase }
+export default supabase
+
+// Funciones útiles
+export async function getCurrentUser() {
+  const { data: { user }, error } = await supabase.auth.getUser()
+  return { user, error }
+}
+
+export async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  return { error }
+}
