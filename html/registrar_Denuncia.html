@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrar Denuncia - Cusco Reporta</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #mapContainer { height: 300px; width: 100%; border-radius: 8px; }
+    .fila { display: flex; flex-wrap: wrap; gap: 30px; }
+    .columna { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px; }
+    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
+    .modal-content { background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; }
+    .modal-content h3 { margin-top:0; }
+    .close-modal { float:right; cursor:pointer; font-size:18px; font-weight:bold; }
+    textarea { width:100%; min-height:100px; padding:8px; border-radius:5px; border:1px solid #ccc; resize:none; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR SUPERIOR -->
+  <header class="topbar">
+    <div class="topbar__logo">
+      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+    </div>
+    <nav class="topbar__menu">
+      <a href="index.html">Inicio</a>
+      <a href="sobre_nosotros.html">Sobre nosotros</a>
+      <a href="ayuda.html">Ayuda</a>
+    </nav>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="container" style="display:flex; gap:20px;">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" style="display:flex; flex-direction:column; justify-content:flex-start;">
+      <div class="sidebar__user" style="margin-bottom:10px;">
+        <div class="sidebar__avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="sidebar__info"><h3>Jose Pérez</h3><p>Ciudadano</p></div>
+      </div>
+
+      <ul class="sidebar__menu" style="margin-top: 0; padding-top: 0; list-style: none;">
+        <li style="display: flex; align-items: flex-start;">
+          <a href="perfil_usuario.html" >
+            <i class="fa-solid fa-id-card" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Ver perfil</span>
+          </a>
+        </li>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="ReportarIncidencia.html">
+            <i class="fa-solid fa-pen-to-square" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Reportar</span>
+          </a>
+        </li>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="registrar_Denuncia.html"class="active">
+            <i class="fa-solid fa-triangle-exclamation" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Denunciar</span>
+          </a>
+        </li>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="lista_incidencias.html">
+            <i class="fa-solid fa-list-check" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Estado de reportes</span>
+          </a>
+        </li>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="MapaIncidiencias(Ciudadano).html">
+            <i class="fa-solid fa-map-location-dot" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Mapa de incidencias</span>
+          </a>
+        </li>
+        <li style="display: flex; align-items: flex-start;">
+          <a href="notificaciones.html">
+            <i class="fa-solid fa-bell" style="width: 20px;"></i>
+            <span style="margin-left:8px;">Notificaciones</span>
+          </a>
+        </li>
+      </ul>
+
+
+      <button class="logout-btn" id="logoutBtn" style="margin-top:auto;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content denuncia-form" style="flex:1;">
+      <h1>Registrar Denuncia</h1>
+      <form id="formDenuncia" class="formulario">
+        <div class="fila">
+          <!-- IZQUIERDA -->
+          <div class="columna">
+            <div class="campo"><label for="fecha">Fecha</label><input type="text" id="fecha" placeholder="dd/mm/aaaa"></div>
+            <div class="campo"><label for="departamento">Departamento</label>
+              <select id="departamento"><option>Seleccione</option><option>Cusco</option></select>
+            </div>
+            <div class="campo"><label for="provincia">Provincia</label>
+              <select id="provincia"><option>Seleccione</option><option>Cusco</option></select>
+            </div>
+            <div class="campo"><label for="distrito">Distrito</label>
+              <select id="distrito"><option>Seleccione</option><option>San Sebastián</option><option>San Jerónimo</option><option>Cusco</option></select>
+            </div>
+            <div class="campo"><label for="referencia">Referencia</label><input type="text" id="referencia" placeholder="Referencia del lugar"></div>
+
+            <!-- Tipo de incidente -->
+            <div class="campo">
+              <label for="tipo_incidente">Tipo de incidente</label>
+              <select id="tipo_incidente">
+                <option>Seleccione</option>
+                <option>Accidente</option>
+                <option>Choque</option>
+                <option>Mal estacionamiento</option>
+                <option>Robo</option>
+                <option value="otro">Otro</option>
+              </select>
+              <input type="text" id="otro_incidente" placeholder="Describa otro tipo de incidente" style="display:none; margin-top:5px;">
+            </div>
+
+            <!-- Descripción de los hechos -->
+            <div class="campo">
+              <label for="hechos">Descripción de los hechos</label>
+              <textarea id="hechos" placeholder="Describa lo sucedido..."></textarea>
+            </div>
+          </div>
+
+          <!-- DERECHA: DATOS Y MAPA -->
+          <div class="columna">
+            <div class="campo"><label>Ubicar en el mapa</label><div id="mapContainer"></div></div>
+            <div class="campo" style="display:flex; gap:10px;">
+              <button type="button" class="btn-secundario" id="btnVictima" style="flex:1;">Datos de la víctima</button>
+              <button type="button" class="btn-secundario" id="btnDenunciado" style="flex:1;">Datos del denunciado</button>
+            </div>
+            <div class="campo" style="text-align:center;"><button type="submit" class="btn-principal" style="margin-top:15px;">Aceptar</button></div>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- MODALES -->
+  <div class="modal" id="modalVictima">
+    <div class="modal-content">
+      <span class="close-modal" id="closeVictima">&times;</span>
+      <h3>Datos de la víctima</h3>
+      <input type="text" placeholder="Nombre"><br><br>
+      <input type="text" placeholder="DNI"><br><br>
+      <input type="text" placeholder="Teléfono">
+    </div>
+  </div>
+
+  <div class="modal" id="modalDenunciado">
+    <div class="modal-content">
+      <span class="close-modal" id="closeDenunciado">&times;</span>
+      <h3>Datos del denunciado</h3>
+      <input type="text" placeholder="Nombre"><br><br>
+      <input type="text" placeholder="DNI"><br><br>
+      <input type="text" placeholder="Teléfono">
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", ()=>window.location.href="index.html");
+
+    // Mapa de Cusco
+    const map = L.map('mapContainer').setView([-13.5171,-71.9784],15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'&copy; OpenStreetMap contributors', maxZoom:19
+    }).addTo(map);
+
+    let marcador = null;
+    map.on('click', function(e){
+      if(marcador) map.removeLayer(marcador);
+      marcador = L.marker(e.latlng).addTo(map)
+        .bindPopup(`Ubicación seleccionada: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`)
+        .openPopup();
+    });
+
+    // Modales
+    const modalVictima = document.getElementById("modalVictima");
+    const modalDenunciado = document.getElementById("modalDenunciado");
+    document.getElementById("btnVictima").onclick = ()=>modalVictima.style.display="flex";
+    document.getElementById("btnDenunciado").onclick = ()=>modalDenunciado.style.display="flex";
+    document.getElementById("closeVictima").onclick = ()=>modalVictima.style.display="none";
+    document.getElementById("closeDenunciado").onclick = ()=>modalDenunciado.style.display="none";
+    window.onclick = (e)=>{
+      if(e.target==modalVictima) modalVictima.style.display="none";
+      if(e.target==modalDenunciado) modalDenunciado.style.display="none";
+    };
+
+    // Mostrar campo "Otro" si se selecciona
+    const tipoSelect = document.getElementById("tipo_incidente");
+    const otroInput = document.getElementById("otro_incidente");
+    tipoSelect.addEventListener("change", function(){
+      otroInput.style.display = (this.value==="otro") ? "block":"none";
+    });
+  </script>
+</body>
+</html>
