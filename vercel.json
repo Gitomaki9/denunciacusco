@@ -1,42 +1,12 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
   "rewrites": [
-    {
-      "source": "/(css|js|assents)/(.*)",
-      "destination": "/$1/$2"
-    },
     {
       "source": "/",
       "destination": "/html/index.html"
     },
     {
-      "source": "/login",
-      "destination": "/html/login.html"
-    },
-    {
-      "source": "/registro", 
-      "destination": "/html/registro.html"
-    },
-    {
-      "source": "/contactanos",
-      "destination": "/html/contactanos.html"
-    },
-    {
-      "source": "/normativa",
-      "destination": "/html/normativa.html"
-    },
-    {
-      "source": "/perfil",
-      "destination": "/html/perfil.html"
-    },
-    {
-      "source": "/denuncias",
-      "destination": "/html/denuncias.html"
-    },
-    {
-      "source": "/crear_denuncia",
-      "destination": "/html/crear_denuncia.html"
+      "source": "/:page",
+      "destination": "/html/:page.html"
     }
   ]
 }
