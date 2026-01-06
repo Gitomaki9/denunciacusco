@@ -1,9 +1,34 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
+    // 1. Primero archivos estáticos (CSS, JS, imágenes)
+    {
+      "source": "/(css|js|assents)/(.*)",
+      "destination": "/$1/$2"
+    },
+    
+    // 2. Página principal
     {
       "source": "/",
       "destination": "/html/index.html"
     },
+    
+    // 3. Archivos con NOMBRES ESPECIALES (¡IMPORTANTE!)
+    {
+      "source": "/iniciar-sesion",
+      "destination": "/html/iniciar-sesion.html"
+    },
+    {
+      "source": "/sobre_nosotros", 
+      "destination": "/html/sobre_nosotros.html"
+    },
+    {
+      "source": "/Mapalncidencias-Ciudadano",
+      "destination": "/html/Mapalncidencias(Ciudadano).html"
+    },
+    
+    // 4. Catch-all para TODOS los demás (22 archivos restantes)
     {
       "source": "/:page",
       "destination": "/html/:page.html"
