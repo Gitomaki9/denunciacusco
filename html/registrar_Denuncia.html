@@ -4,9 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registrar Denuncia - Cusco Reporta</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  
+  <!-- RUTAS CORREGIDAS para Netlify (sin ../) -->
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- CARGAR SUPABASE EN EL HEAD (IMPORTANTE) -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
+    // Guardar la biblioteca globalmente
+    window.supabaseLib = window.supabase;
+  </script>
+  
   <style>
     #mapContainer { height: 300px; width: 100%; border-radius: 8px; }
     .fila { display: flex; flex-wrap: wrap; gap: 30px; }
@@ -16,18 +26,39 @@
     .modal-content h3 { margin-top:0; }
     .close-modal { float:right; cursor:pointer; font-size:18px; font-weight:bold; }
     textarea { width:100%; min-height:100px; padding:8px; border-radius:5px; border:1px solid #ccc; resize:none; }
+    
+    /* Estilos para mensajes */
+    .mensaje-flotante {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .exito { background-color: #28a745; }
+    .error { background-color: #dc3545; }
   </style>
 </head>
 <body>
   <!-- NAVBAR SUPERIOR -->
   <header class="topbar">
     <div class="topbar__logo">
-      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+      <img src="assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
     </div>
     <nav class="topbar__menu">
-      <a href="/index">Inicio</a>
-      <a href="/sobre_nosotros">Sobre nosotros</a>
-      <a href="/ayuda">Ayuda</a>
+      <a href="index.html">Inicio</a>
+      <a href="sobre_nosotros.html">Sobre nosotros</a>
+      <a href="ayuda.html">Ayuda</a>
+      <a href="consultas.html">Ver Denuncias</a>
     </nav>
   </header>
 
@@ -42,180 +73,556 @@
 
       <ul class="sidebar__menu" style="margin-top: 0; padding-top: 0; list-style: none;">
         <li style="display: flex; align-items: flex-start;">
-          <a href="/perfil_usuario" >
+          <a href="perfil_usuario.html">
             <i class="fa-solid fa-id-card" style="width: 20px;"></i>
             <span style="margin-left:8px;">Ver perfil</span>
           </a>
         </li>
         <li style="display: flex; align-items: flex-start;">
-          <a href="/ReportarIncidencia">
+          <a href="ReportarIncidencia.html">
             <i class="fa-solid fa-pen-to-square" style="width: 20px;"></i>
             <span style="margin-left:8px;">Reportar</span>
           </a>
         </li>
         <li style="display: flex; align-items: flex-start;">
-          <a href="/registrar_Denuncia"class="active">
+          <a href="registrar_Denuncia.html" class="active">
             <i class="fa-solid fa-triangle-exclamation" style="width: 20px;"></i>
             <span style="margin-left:8px;">Denunciar</span>
           </a>
         </li>
         <li style="display: flex; align-items: flex-start;">
-          <a href="/lista_incidencias">
+          <a href="lista_incidencias.html">
             <i class="fa-solid fa-list-check" style="width: 20px;"></i>
             <span style="margin-left:8px;">Estado de reportes</span>
           </a>
         </li>
         <li style="display: flex; align-items: flex-start;">
-          <a href="/MapaIncidiencias(Ciudadano)">
+          <a href="MapaIncidiencias(Ciudadano).html">
             <i class="fa-solid fa-map-location-dot" style="width: 20px;"></i>
             <span style="margin-left:8px;">Mapa de incidencias</span>
           </a>
         </li>
         <li style="display: flex; align-items: flex-start;">
-          <a href="/notificaciones">
+          <a href="notificaciones.html">
             <i class="fa-solid fa-bell" style="width: 20px;"></i>
             <span style="margin-left:8px;">Notificaciones</span>
           </a>
         </li>
       </ul>
 
-
-      <button class="logout-btn" id="logoutBtn" style="margin-top:auto;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+      <button class="logout-btn" id="logoutBtn" style="margin-top:auto;">
+        <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+      </button>
     </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content denuncia-form" style="flex:1;">
-      <h1>Registrar Denuncia</h1>
+      <h1><i class="fa-solid fa-triangle-exclamation"></i> Registrar Denuncia</h1>
+      <p style="color: #666; margin-bottom: 25px;">Completa el formulario para reportar una incidencia de tránsito.</p>
+      
       <form id="formDenuncia" class="formulario">
         <div class="fila">
           <!-- IZQUIERDA -->
           <div class="columna">
-            <div class="campo"><label for="fecha">Fecha</label><input type="text" id="fecha" placeholder="dd/mm/aaaa"></div>
-            <div class="campo"><label for="departamento">Departamento</label>
-              <select id="departamento"><option>Seleccione</option><option>Cusco</option></select>
+            <div class="campo">
+              <label for="fecha"><i class="fa-solid fa-calendar"></i> Fecha *</label>
+              <input type="date" id="fecha" required>
             </div>
-            <div class="campo"><label for="provincia">Provincia</label>
-              <select id="provincia"><option>Seleccione</option><option>Cusco</option></select>
+            
+            <div class="campo">
+              <label for="departamento"><i class="fa-solid fa-location-dot"></i> Departamento *</label>
+              <select id="departamento" required>
+                <option value="">Seleccione</option>
+                <option value="Cusco" selected>Cusco</option>
+              </select>
             </div>
-            <div class="campo"><label for="distrito">Distrito</label>
-              <select id="distrito"><option>Seleccione</option><option>San Sebastián</option><option>San Jerónimo</option><option>Cusco</option></select>
+            
+            <div class="campo">
+              <label for="provincia">Provincia *</label>
+              <select id="provincia" required>
+                <option value="">Seleccione</option>
+                <option value="Cusco" selected>Cusco</option>
+              </select>
             </div>
-            <div class="campo"><label for="referencia">Referencia</label><input type="text" id="referencia" placeholder="Referencia del lugar"></div>
+            
+            <div class="campo">
+              <label for="distrito">Distrito *</label>
+              <select id="distrito" required>
+                <option value="">Seleccione</option>
+                <option value="Cusco">Cusco</option>
+                <option value="San Sebastián">San Sebastián</option>
+                <option value="San Jerónimo">San Jerónimo</option>
+              </select>
+            </div>
+            
+            <div class="campo">
+              <label for="referencia"><i class="fa-solid fa-map-pin"></i> Referencia *</label>
+              <input type="text" id="referencia" placeholder="Ej: Av. El Sol frente al mercado" required>
+            </div>
 
             <!-- Tipo de incidente -->
             <div class="campo">
-              <label for="tipo_incidente">Tipo de incidente</label>
-              <select id="tipo_incidente">
-                <option>Seleccione</option>
-                <option>Accidente</option>
-                <option>Choque</option>
-                <option>Mal estacionamiento</option>
-                <option>Robo</option>
-                <option value="otro">Otro</option>
+              <label for="tipo_incidente"><i class="fa-solid fa-car-burst"></i> Tipo de incidente *</label>
+              <select id="tipo_incidente" required>
+                <option value="">Seleccione</option>
+                <option value="Accidente">Accidente</option>
+                <option value="Choque">Choque</option>
+                <option value="Mal estacionamiento">Mal estacionamiento</option>
+                <option value="Robo">Robo</option>
+                <option value="Exceso de velocidad">Exceso de velocidad</option>
+                <option value="Bache o hueco">Bache o hueco</option>
+                <option value="Semáforo dañado">Semáforo dañado</option>
+                <option value="Otro">Otro</option>
               </select>
-              <input type="text" id="otro_incidente" placeholder="Describa otro tipo de incidente" style="display:none; margin-top:5px;">
-            </div>
-
-            <!-- Descripción de los hechos -->
-            <div class="campo">
-              <label for="hechos">Descripción de los hechos</label>
-              <textarea id="hechos" placeholder="Describa lo sucedido..."></textarea>
             </div>
           </div>
 
           <!-- DERECHA: DATOS Y MAPA -->
           <div class="columna">
-            <div class="campo"><label>Ubicar en el mapa</label><div id="mapContainer"></div></div>
-            <div class="campo" style="display:flex; gap:10px;">
-              <button type="button" class="btn-secundario" id="btnVictima" style="flex:1;">Datos de la víctima</button>
-              <button type="button" class="btn-secundario" id="btnDenunciado" style="flex:1;">Datos del denunciado</button>
+            <div class="campo">
+              <label><i class="fa-solid fa-map"></i> Ubicar en el mapa (opcional)</label>
+              <div id="mapContainer"></div>
+              <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                Haz clic en el mapa para seleccionar la ubicación exacta
+              </p>
             </div>
-            <div class="campo" style="text-align:center;"><button type="submit" class="btn-principal" style="margin-top:15px;">Aceptar</button></div>
+            
+            <!-- Descripción de los hechos -->
+            <div class="campo">
+              <label for="hechos"><i class="fa-solid fa-file-lines"></i> Descripción de los hechos *</label>
+              <textarea id="hechos" placeholder="Describa detalladamente lo sucedido, hora aproximada, vehículos involucrados, etc." required></textarea>
+            </div>
+            
+            <div class="campo">
+              <label for="prioridad"><i class="fa-solid fa-exclamation-circle"></i> Prioridad</label>
+              <select id="prioridad">
+                <option value="Normal">Normal</option>
+                <option value="Alta">Alta (riesgo inmediato)</option>
+                <option value="Urgente">Urgente (necesita atención inmediata)</option>
+              </select>
+            </div>
+            
+            <div class="campo" style="display:flex; gap:10px; margin-top: 10px;">
+              <button type="button" class="btn-secundario" id="btnVictima" style="flex:1;">
+                <i class="fa-solid fa-user-injured"></i> Datos de la víctima
+              </button>
+              <button type="button" class="btn-secundario" id="btnDenunciado" style="flex:1;">
+                <i class="fa-solid fa-user-police"></i> Datos del denunciado
+              </button>
+            </div>
+            
+            <div class="campo" style="text-align:center; margin-top: 20px;">
+              <button type="submit" class="btn-principal" id="btnEnviar" style="padding: 12px 30px; font-size: 16px;">
+                <i class="fa-solid fa-paper-plane"></i> Enviar Denuncia
+              </button>
+              <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                * Campos obligatorios
+              </p>
+            </div>
           </div>
         </div>
       </form>
+      
+      <!-- Información adicional -->
+      <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <h3><i class="fa-solid fa-circle-info"></i> Información importante</h3>
+        <ul style="color: #555;">
+          <li>Tu denuncia será revisada por las autoridades correspondientes</li>
+          <li>Recibirás un número de seguimiento para consultar el estado</li>
+          <li>Puedes reportar de forma anónima si lo prefieres</li>
+          <li>Los datos personales son protegidos según la ley de protección de datos</li>
+        </ul>
+      </div>
     </main>
   </div>
 
   <!-- MODALES -->
-  <div class="modal" id="modalVictima">
-    <div class="modal-content">
-      <span class="close-modal" id="closeVictima">&times;</span>
-      <h3>Datos de la víctima</h3>
-      <input type="text" placeholder="Nombre"><br><br>
-      <input type="text" placeholder="DNI"><br><br>
-      <input type="text" placeholder="Teléfono">
-    </div>
+<!-- MODAL VÍCTIMA - MODIFICADO -->
+<div class="modal" id="modalVictima">
+  <div class="modal-content">
+    <span class="close-modal" id="closeVictima">&times;</span>
+    <h3><i class="fa-solid fa-user-injured"></i> Datos de la víctima (opcional)</h3>
+    <input type="text" id="victima_nombre" name="victima_nombre" placeholder="Nombre completo"><br><br>
+    <input type="text" id="victima_dni" name="victima_dni" placeholder="DNI"><br><br>
+    <input type="text" id="victima_telefono" name="victima_telefono" placeholder="Teléfono"><br><br>
+    <button type="button" class="btn-secundario" onclick="document.getElementById('modalVictima').style.display='none'" style="width:100%;">Guardar y cerrar</button>
   </div>
+</div>
 
-  <div class="modal" id="modalDenunciado">
-    <div class="modal-content">
-      <span class="close-modal" id="closeDenunciado">&times;</span>
-      <h3>Datos del denunciado</h3>
-      <input type="text" placeholder="Nombre"><br><br>
-      <input type="text" placeholder="DNI"><br><br>
-      <input type="text" placeholder="Teléfono">
-    </div>
+<!-- MODAL DENUNCIADO - MODIFICADO -->
+<div class="modal" id="modalDenunciado">
+  <div class="modal-content">
+    <span class="close-modal" id="closeDenunciado">&times;</span>
+    <h3><i class="fa-solid fa-user-police"></i> Datos del denunciado (opcional)</h3>
+    <input type="text" id="denunciado_nombre" name="denunciado_nombre" placeholder="Nombre completo"><br><br>
+    <input type="text" id="denunciado_dni" name="denunciado_dni" placeholder="DNI"><br><br>
+    <input type="text" id="denunciado_telefono" name="denunciado_telefono" placeholder="Teléfono"><br><br>
+    <button type="button" class="btn-secundario" onclick="document.getElementById('modalDenunciado').style.display='none'" style="width:100%;">Guardar y cerrar</button>
   </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", ()=>window.location.href="/index");
-
-    // Mapa de Cusco
-    const map = L.map('mapContainer').setView([-13.5171,-71.9784],15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      attribution:'&copy; OpenStreetMap contributors', maxZoom:19
-    }).addTo(map);
-
-    let marcador = null;
-    map.on('click', function(e){
-      if(marcador) map.removeLayer(marcador);
-      marcador = L.marker(e.latlng).addTo(map)
-        .bindPopup(`Ubicación seleccionada: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`)
-        .openPopup();
-    });
-
-    // Modales
-    const modalVictima = document.getElementById("modalVictima");
-    const modalDenunciado = document.getElementById("modalDenunciado");
-    document.getElementById("btnVictima").onclick = ()=>modalVictima.style.display="flex";
-    document.getElementById("btnDenunciado").onclick = ()=>modalDenunciado.style.display="flex";
-    document.getElementById("closeVictima").onclick = ()=>modalVictima.style.display="none";
-    document.getElementById("closeDenunciado").onclick = ()=>modalDenunciado.style.display="none";
-    window.onclick = (e)=>{
-      if(e.target==modalVictima) modalVictima.style.display="none";
-      if(e.target==modalDenunciado) modalDenunciado.style.display="none";
-    };
-
-    // Mostrar campo "Otro" si se selecciona
-    const tipoSelect = document.getElementById("tipo_incidente");
-    const otroInput = document.getElementById("otro_incidente");
-    tipoSelect.addEventListener("change", function(){
-      otroInput.style.display = (this.value==="otro") ? "block":"none";
-    });
-     <!-- Scripts EXTERNOS -->
+  <!-- SCRIPTS EN ORDEN CORRECTO -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
-  <!-- Scripts MODULARES (type="module" es clave) -->
-  <script type="module">
-    // Importar solo lo necesario para esta página
-    import { inicializarFormularioDenuncia } from '../js/formulario-denuncia.js'
-    import { cerrarSesion } from '../js/auth.js'
-    
-    // Inicializar cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', async function() {
-      // Inicializar formulario
-      await inicializarFormularioDenuncia()
+  <script>
+    // ESPERAR A QUE TODO ESTÉ LISTO
+    document.addEventListener('DOMContentLoaded', function() {
+      // ==================== CONFIGURAR SUPABASE ====================
+      // ¡REEMPLAZA CON TUS CREDENCIALES EXACTAS!
+      const SUPABASE_URL = 'https://grchvnewfkakaqfkgbzy.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_bQZ1guTH9D2ByDwgMYGLfQ_g7bIsktc';
       
-      // Configurar logout (si el botón existe)
-      const logoutBtn = document.getElementById('logoutBtn')
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', cerrarSesion)
+      // Verificar que la biblioteca se cargó
+      if (!window.supabaseLib) {
+        console.error('❌ Error: Supabase no se cargó correctamente');
+        alert('Error: No se pudo conectar con la base de datos. Recarga la página.');
+        return;
       }
-    })
+      
+      // Crear cliente de Supabase
+      let supabase;
+      try {
+        supabase = window.supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase configurado correctamente');
+      // DESPUÉS:
+      } catch (error) {
+        errorHandler.registrar('supabase_init', error, { accion: 'crear_cliente' });
+        errorHandler.mostrarUsuario(error, 'error');
+        return;
+      }
+      
+      // ==================== VARIABLES GLOBALES ====================
+      let map = null;
+      let marcador = null;
+      let coordenadasSeleccionadas = null;
+      
+      // ==================== INICIALIZAR MAPA ====================
+      function inicializarMapa() {
+        try {
+          map = L.map('mapContainer').setView([-13.5171, -71.9784], 15);
+          
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            maxZoom: 19
+          }).addTo(map);
+          
+          // Manejar clics en el mapa
+          map.on('click', function(e) {
+            if (marcador) {
+              map.removeLayer(marcador);
+            }
+            
+            coordenadasSeleccionadas = {
+              lat: e.latlng.lat,
+              lng: e.latlng.lng
+            };
+            
+            marcador = L.marker([coordenadasSeleccionadas.lat, coordenadasSeleccionadas.lng])
+              .addTo(map)
+              .bindPopup(`Ubicación: ${coordenadasSeleccionadas.lat.toFixed(5)}, ${coordenadasSeleccionadas.lng.toFixed(5)}`)
+              .openPopup();
+              
+            console.log('📍 Coordenadas:', coordenadasSeleccionadas);
+          });
+          
+          console.log('✅ Mapa inicializado');
+              } catch (error) {
+        errorHandler.registrar('mapa', error, { modulo: 'leaflet' });
+        errorHandler.mostrarUsuario(
+          { message: 'Error al cargar el mapa. Funcionalidad limitada.' }, 
+          'warning'
+        );
+      }
+      }
+      
+      // ==================== CONFIGURAR MODALES ====================
+      function configurarModales() {
+        const modalVictima = document.getElementById("modalVictima");
+        const modalDenunciado = document.getElementById("modalDenunciado");
+        
+        document.getElementById("btnVictima").onclick = () => modalVictima.style.display = "flex";
+        document.getElementById("btnDenunciado").onclick = () => modalDenunciado.style.display = "flex";
+        
+        document.getElementById("closeVictima").onclick = () => modalVictima.style.display = "none";
+        document.getElementById("closeDenunciado").onclick = () => modalDenunciado.style.display = "none";
+        
+        window.onclick = (e) => {
+          if (e.target == modalVictima) modalVictima.style.display = "none";
+          if (e.target == modalDenunciado) modalDenunciado.style.display = "none";
+        };
+        
+        console.log('✅ Modales configurados');
+      }
+      
+// ==================== CONFIGURAR FORMULARIO (VERSIÓN CORREGIDA) ====================
+function configurarFormulario() {
+  const form = document.getElementById('formDenuncia');
+  const btnEnviar = document.getElementById('btnEnviar');
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Validar campos requeridos
+    const camposRequeridos = ['tipo_incidente', 'hechos', 'referencia', 'departamento', 'provincia', 'distrito'];
+    let camposInvalidos = [];
+    
+    for (const campoId of camposRequeridos) {
+      const campo = document.getElementById(campoId);
+      if (!campo.value.trim()) {
+        camposInvalidos.push(campoId);
+        campo.style.borderColor = '#dc3545';
+        setTimeout(() => campo.style.borderColor = '', 3000);
+      } else {
+        campo.style.borderColor = '#28a745';
+      }
+    }
+    
+    if (camposInvalidos.length > 0) {
+      errorHandler.mostrarUsuario(
+        { message: `Completa ${camposInvalidos.length} campo(s) obligatorio(s)` }, 
+        'warning'
+      );
+      document.getElementById(camposInvalidos[0]).focus();
+      return;
+    }
+    
+    // Cambiar estado del botón
+    const textoOriginal = btnEnviar.innerHTML;
+    btnEnviar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    btnEnviar.disabled = true;
+    
+    try {
+      // ============ ¡¡¡ESTO ES LO MÁS IMPORTANTE!!! ============
+      // Recolectar datos de VÍCTIMA y DENUNCIADO
+      const datosVictima = {
+        nombre: document.getElementById('victima_nombre')?.value || '',
+        dni: document.getElementById('victima_dni')?.value || '',
+        telefono: document.getElementById('victima_telefono')?.value || ''
+      };
+      
+      const datosDenunciado = {
+        nombre: document.getElementById('denunciado_nombre')?.value || '',
+        dni: document.getElementById('denunciado_dni')?.value || '',
+        telefono: document.getElementById('denunciado_telefono')?.value || ''
+      };
+      
+      // Crear campos combinados para Supabase (opción 1 - campos separados)
+      const victimaTexto = datosVictima.nombre ? 
+        `${datosVictima.nombre}${datosVictima.dni ? ' | DNI: ' + datosVictima.dni : ''}${datosVictima.telefono ? ' | Tel: ' + datosVictima.telefono : ''}` : '';
+      
+      const denunciadoTexto = datosDenunciado.nombre ? 
+        `${datosDenunciado.nombre}${datosDenunciado.dni ? ' | DNI: ' + datosDenunciado.dni : ''}${datosDenunciado.telefono ? ' | Tel: ' + datosDenunciado.telefono : ''}` : '';
+      
+      // Obtener usuario de sesión
+      let usuarioEmail = 'anonimo@example.com';
+      let userId = null;
+      try {
+        const userData = sessionStorage.getItem('user');
+        if (userData) {
+          const usuario = JSON.parse(userData);
+          usuarioEmail = usuario.email || usuarioEmail;
+          userId = usuario.id || userId;
+        }
+      } catch (e) {
+        console.warn('No se pudo obtener usuario de sesión:', e);
+      }
+      
+      // Preparar datos para Supabase
+      const datosDenuncia = {
+        titulo: document.getElementById('tipo_incidente').value,
+        descripcion: document.getElementById('hechos').value,
+        categoria: 'Tránsito',
+        estado: 'pendiente',
+        ubicacion: document.getElementById('referencia').value,
+        departamento: document.getElementById('departamento').value,
+        provincia: document.getElementById('provincia').value,
+        distrito: document.getElementById('distrito').value,
+        prioridad: document.getElementById('prioridad').value,
+        fecha_incidente: document.getElementById('fecha').value,
+        coordenadas: coordenadasSeleccionadas ? 
+          `${coordenadasSeleccionadas.lat}, ${coordenadasSeleccionadas.lng}` : null,
+        creado_en: new Date().toISOString(),
+        tipo_formulario: 'denuncia',
+        
+        // ============ ¡¡¡NUEVOS CAMPOS CRÍTICOS!!! ============
+        victima: victimaTexto,  // Texto combinado de víctima
+        denunciado: denunciadoTexto,  // Texto combinado de denunciado
+        
+        // Campos individuales (opcional)
+        victima_nombre: datosVictima.nombre,
+        victima_dni: datosVictima.dni,
+        victima_telefono: datosVictima.telefono,
+        denunciado_nombre: datosDenunciado.nombre,
+        denunciado_dni: datosDenunciado.dni,
+        denunciado_telefono: datosDenunciado.telefono,
+        
+        // Metadata del usuario
+        usuario_email: usuarioEmail,
+        user_id: userId
+      };
+      
+      console.log('📤 Enviando a Supabase:', datosDenuncia);
+      console.log('✅ Víctima:', datosDenuncia.victima);
+      console.log('✅ Denunciado:', datosDenuncia.denunciado);
+      
+      errorHandler.registrar('formulario', null, { 
+        accion: 'enviando_denuncia', 
+        tiene_victima: !!datosDenuncia.victima,
+        tiene_denunciado: !!datosDenuncia.denunciado
+      });
+      
+      // ENVIAR A LA BASE DE DATOS
+      const { data, error } = await supabase
+        .from('denuncias')
+        .insert([datosDenuncia])
+        .select();
+      
+      if (error) {
+        errorHandler.registrar('supabase_insert', error, { 
+          tabla: 'denuncias', 
+          datos: datosDenuncia 
+        });
+        throw new Error(`Error de base de datos: ${error.message}`);
+      }
+      
+      // ÉXITO
+      console.log('✅ Denuncia guardada con ID:', data[0].id);
+      console.log('✅ Datos guardados:', {
+        victima: data[0].victima,
+        denunciado: data[0].denunciado
+      });
+      
+      errorHandler.registrar('exito', null, { 
+        id_denuncia: data[0].id, 
+        tipo: 'denuncia',
+        victima_guardada: !!data[0].victima,
+        denunciado_guardado: !!data[0].denunciado
+      });
+      
+      // Mostrar mensaje de éxito CON DETALLES
+      errorHandler.mostrarUsuario(
+        { 
+          message: `Denuncia #${data[0].id} registrada exitosamente`,
+          detalles: datosDenuncia.victima ? 'Con datos de víctima y denunciado' : 'Sin datos personales'
+        }, 
+        'success'
+      );
+      
+      // Limpiar formulario
+      form.reset();
+      document.getElementById('fecha').valueAsDate = new Date();
+      
+      // Limpiar modales también
+      document.getElementById('victima_nombre').value = '';
+      document.getElementById('victima_dni').value = '';
+      document.getElementById('victima_telefono').value = '';
+      document.getElementById('denunciado_nombre').value = '';
+      document.getElementById('denunciado_dni').value = '';
+      document.getElementById('denunciado_telefono').value = '';
+      
+      // Limpiar mapa
+      if (marcador) {
+        map.removeLayer(marcador);
+        marcador = null;
+        coordenadasSeleccionadas = null;
+      }
+      
+      // Redirigir después de 3 segundos (opcional)
+    //  setTimeout(() => {
+    //    window.location.href = 'Estado_Reporte.html';
+    //  }, 3000);
+      
+    } catch (error) {
+      // ERROR - USANDO ERROR HANDLER
+      errorHandler.registrar('exception', error, { 
+        modulo: 'formulario_denuncia', 
+        accion: 'submit' 
+      });
+      
+      // Mostrar error apropiado al usuario
+      errorHandler.mostrarUsuario(error, 'error');
+      
+    } finally {
+      // Siempre restaurar botón
+      btnEnviar.innerHTML = textoOriginal;
+      btnEnviar.disabled = false;
+    }
+  });
+  
+  console.log('✅ Formulario configurado con manejo de errores Y CAMPOS VÍCTIMA/DENUNCIADO');
+}
+    // Agrega esto después de configurarFormulario()
+function mostrarResumenAntesDeEnviar() {
+  const btnEnviar = document.getElementById('btnEnviar');
+  
+  btnEnviar.addEventListener('click', function(e) {
+    // Solo si no es submit (preventivo)
+    if (e.target.type !== 'submit') {
+      const victima = document.getElementById('victima_nombre')?.value;
+      const denunciado = document.getElementById('denunciado_nombre')?.value;
+      
+      if (victima || denunciado) {
+        console.log('📝 Resumen antes de enviar:');
+        console.log('  Víctima:', victima || 'No especificada');
+        console.log('  Denunciado:', denunciado || 'No especificado');
+      }
+    }
+  });
+}
+      
+      // ==================== CONFIGURAR LOGOUT ====================
+document.getElementById("logoutBtn").addEventListener("click", async function() {
+  if (confirm("¿Estás seguro de cerrar sesión?")) {
+    try {
+      // Intentar cerrar sesión en Supabase
+      await supabase.auth.signOut();
+      errorHandler.registrar('sesion', null, { accion: 'logout_exitoso' });
+    } catch (error) {
+      errorHandler.registrar('sesion', error, { accion: 'logout_error' });
+    }
+    
+    // Limpiar sesión local
+    sessionStorage.removeItem('user');
+    errorHandler.mostrarUsuario(
+      { message: 'Sesión cerrada correctamente' }, 
+      'success'
+    );
+    
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
+  }
+});
+      
+      // ==================== INICIALIZAR TODO ====================
+      function inicializarTodo() {
+        // 1. Poner fecha actual
+        document.getElementById('fecha').valueAsDate = new Date();
+        
+        // 2. Inicializar mapa
+        inicializarMapa();
+        
+        // 3. Configurar modales
+        configurarModales();
+        
+        // 4. Configurar formulario
+        configurarFormulario();
+        
+        // 5. Configurar resumen
+        mostrarResumenAntesDeEnviar();
+        
+        console.log('✅ Aplicación completamente inicializada');
+      }
+      
+      // EJECUTAR INICIALIZACIÓN
+      inicializarTodo();
+      
+    }); // Fin del DOMContentLoaded
   </script>
+  <!-- Al final de cada HTML, ANTES del </body> -->
+<script src="js/errorHandler.js"></script>
+<script>
+  const errorHandler = new ErrorHandlerCusco();
+</script>
 </body>
 </html>
