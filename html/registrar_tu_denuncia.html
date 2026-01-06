@@ -4,34 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cusco Reporta – Registrar Denuncia</title>
+  
   <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/registrar_tu_denuncia.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <!-- ======= HEADER ======= -->
   <header class="navbar">
     <div class="navbar__left">
-      <img src="../assents/images/MTC.png" alt="Logo MTC" class="navbar__logo">
-      <img src="../assents/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
+      <img href="../css/images/MTC.png" alt="Logo MTC" class="navbar__logo">
+      <img href="../css/images/CuscoReporta.png" alt="Logo Cusco Reporta" class="navbar__logo">
     </div>
 
     <nav class="navbar__menu">
-      <a href="/index">Inicio</a>
-      <a href="/registrar_tu_denuncia">Registra tu denuncia</a>
+      <a href="/">Inicio</a>
+      <a href="/registrar_tu_denuncia" class="active">Registra tu denuncia</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/iniciar-sesion">Iniciar Sesión</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
   </header>
 
-  <!-- ======= MAIN ======= -->
   <main class="main">
     <section class="denuncia">
       <h1>REGISTRAR DENUNCIA</h1>
       <p>
-        Puede registrar su denuncia de dos maneras: de forma anónima, la cual seria un <br>
-        reporte de algún incidente o identificándose, la cual seria formalmente. <br>
+        Puede registrar su denuncia de dos maneras: de forma anónima, la cual sería un <br>
+        reporte de algún incidente o identificándose, la cual sería formalmente. <br>
         Complete los datos solicitados según la opción que elija.
       </p>
 
@@ -39,50 +39,47 @@
         <div class="opcion">
           <h2>SIN IDENTIFICARME</h2>
           <div class="icono red">
-            <img src="../assents/anonimo.svg" alt="Anónimo">
+            <img href="../css/anonimo.svg" alt="Anónimo">
           </div>
-          <a href="/ReportarIncidencia" class="boton red">Reportar</a>
+          <button id="btnReportarIncognito" type="button" class="boton red">
+            Reportar
+          </button>
         </div>
 
         <div class="opcion">
           <h2>IDENTIFICÁNDOME</h2>
           <div class="icono blue">
-            <img src="../assents/identificado.svg" alt="Identificado">
+            <img href="../css/identificado.svg" alt="Identificado">
           </div>
-          <a href="/iniciar-sesion" class="boton blue">Denunciar</a>
+          <button id="btnDenunciarLogin" type="button" class="boton blue">
+            Denunciar
+          </button>
         </div>
       </div>
 
-      <!-- ===== TIPOS DE REPORTES ===== -->
       <section class="features">
         <h2>¿Qué puedes reportar?</h2>
-
         <div class="features__grid">
-
           <div class="feature feature--red">
-            <img src="../assents/icons/parking.svg" alt="">
+            <img href="../css/icons/parking.svg" alt="">
             <h3>Mal estacionamiento</h3>
             <p>Vehículos bloqueando veredas, rampas o zonas prohibidas.</p>
           </div>
-
           <div class="feature feature--red">
-            <img src="../assents/icons/redlight.svg" alt="">
+            <img href="../css/icons/redlight.svg" alt="">
             <h3>Ignorar luz roja</h3>
             <p>Peligro directo para peatones y otros conductores.</p>
           </div>
-
           <div class="feature feature--red">
-            <img src="../assents/icons/accident.svg" alt="">
+            <img href="../css/icons/accident.svg" alt="">
             <h3>Accidentes</h3>
             <p>Reporta choques, derrapes u otros sucesos urgentes.</p>
           </div>
-
           <div class="feature feature--red">
-            <img src="../assents/icons/speed.svg" alt="">
+            <img href="../css/icons/speed.svg" alt="">
             <h3>Exceso de velocidad</h3>
             <p>Identifiquemos juntos a conductores imprudentes.</p>
           </div>
-
         </div>
       </section>
 
@@ -90,6 +87,30 @@
     </section>
   </main>
 
-  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnReportar = document.getElementById("btnReportarIncognito");
+      const btnDenunciar = document.getElementById("btnDenunciarLogin");
+
+      if (btnReportar) {
+        btnReportar.addEventListener("click", () => {
+          // Guardamos la intención en el navegador
+          localStorage.setItem("modo_denuncia", "incognito");
+          // Mandamos al formulario unificado
+          window.location.href = "reportar_denuncia.html";
+        });
+      }
+
+      if (btnDenunciar) {
+        btnDenunciar.addEventListener("click", () => {
+          localStorage.setItem("modo_denuncia", "identificado");
+          // Si va a denunciar formalmente, primero debe estar logueado
+          window.location.href = "iniciar-sesion.html";
+        });
+      }
+    });
+  </script>
+
+  <script href="../css/main.js"></script>
 </body>
 </html>

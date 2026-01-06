@@ -1,109 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Usuarios - Cusco Reporta</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Usuarios - Cusco Reporta</title>
+    <link rel="stylesheet" href="../css/gestion_usuarios.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- ====== NAVBAR SUPERIOR ====== -->
-  <header class="topbar">
-    <div class="topbar__logo">
-      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+    <header class="topbar">
+        <div class="topbar__logo">
+            <img href="../css/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+        </div>
+        <nav class="topbar__menu">
+            <a href="/">Inicio</a>
+            <a href="/sobre_nosotros">Sobre nosotros</a>
+            <a href="/ayuda">Ayuda</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        
+        <aside class="sidebar">
+            <div class="sidebar__user">
+                <div class="sidebar__avatar">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div class="sidebar__info">
+                    <h3>Administrador</h3>
+                    <p>Sesión Activa</p>
+                </div>
+            </div>
+
+            <nav class="sidebar__nav">
+                <ul class="sidebar__menu">
+                    <li>
+                        <a href="/perfil_admin">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span>Ver perfil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Estado_Reporte">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Incidencias/Denuncias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Mapa_Incidencias_Admin">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <span>Mapa de incidencias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/reporte_etadistico">
+                            <i class="fa-solid fa-chart-column"></i>
+                            <span>Reporte estadístico</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gestion_usuarios" class="active">
+                            <i class="fa-solid fa-users-gear"></i>
+                            <span>Gestión de usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-tags"></i>
+                            <span>Gestión de categorías</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i> 
+                <span>Cerrar sesión</span>
+            </button>
+        </aside>
+
+        <main class="main-content">
+            <section class="denuncia-form">
+                <div class="header-text">
+                    <h1>Gestión de Usuarios</h1>
+                    <p>Lista de usuarios registrados en el sistema.</p>
+                </div>
+
+                <table id="tablaUsuarios">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </section>
+        </main>
     </div>
-    <nav class="topbar__menu">
-      <a href="/index">Inicio</a>
-      <a href="/sobre_nosotros">Sobre nosotros</a>
-      <a href="/ayuda">Ayuda</a>
-    </nav>
-  </header>
 
-  <!-- ====== CONTENEDOR PRINCIPAL ====== -->
-  <div class="container">
-    <!-- ====== SIDEBAR IZQUIERDO ====== -->
-    <aside class="sidebar" style="display: flex; flex-direction: column; justify-content: flex-start;">
-      <div class="sidebar__user" style="margin-bottom: 10px;">
-        <div class="sidebar__avatar">
-          <i class="fa-solid fa-user-shield"></i>
-        </div>
-        <div class="sidebar__info">
-          <h3>Administrador</h3>
-          <p>Administrador</p>
-        </div>
-      </div>
-
-      <!-- Menú del administrador -->
-      <ul class="sidebar__menu" style="margin-top: 0; padding-top: 0; list-style: none;">
-        <li style="display: flex; align-items: flex-start;">
-          <a href="/perfil_admin" >
-            <i class="fa-solid fa-id-card" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Ver perfil</span>
-          </a>
-        </li>
-        <li style="display: flex; align-items: flex-start;">
-          <a href="/Estado_Reporte">
-            <i class="fa-solid fa-list-check" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Incidencias/Denuncias</span>
-          </a>
-        </li>
-        <li style="display: flex; align-items: flex-start;">
-          <a href="/Mapa_Incidencias_Admin">
-            <i class="fa-solid fa-map-location-dot" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Mapa de incidencias</span>
-          </a>
-        </li>
-        <li style="display: flex; align-items: flex-start;">
-          <a href="/reporte_etadistico">
-            <i class="fa-solid fa-chart-column" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Reporte estadístico</span>
-          </a>
-        </li>
-        <li style="display: flex; align-items: flex-start;">
-          <a href="/gestion_usuarios"class="active">
-            <i class="fa-solid fa-users-gear" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Gestión de usuarios</span>
-          </a>
-        </li>
-        <li style="display: flex; align-items: flex-start;">
-          <a href="#">
-            <i class="fa-solid fa-tags" style="width: 20px;"></i>
-            <span style="margin-left:8px;">Gestión de categorías</span>
-          </a>
-        </li>
-      </ul>
-
-      <button class="logout-btn" id="logoutBtn" style="margin-top: auto;">
-        <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
-      </button>
-    </aside>
-
-    <!-- ====== CONTENIDO PRINCIPAL ====== -->
-    <main class="main-content">
-      <section class="denuncia-form" style="max-width: 900px; width: 100%;">
-        <h1>Gestión de Usuarios</h1>
-        <p style="color:#444; margin-bottom:20px;">Lista de usuarios registrados en el sistema.</p>
-
-        <table id="tablaUsuarios" style="width:100%; border-collapse: collapse; margin-top:10px;">
-          <thead style="background-color:#8b1919; color:white;">
-            <tr>
-              <th style="padding:10px;">ID</th>
-              <th style="padding:10px;">Nombre</th>
-              <th style="padding:10px;">Correo</th>
-              <th style="padding:10px;">Rol</th>
-              <th style="padding:10px;">Acciones</th>
-            </tr>
-          </thead>
-          <tbody style="background:#fff;">
-            <!-- Se llena dinámicamente desde JS -->
-          </tbody>
-        </table>
-      </section>
-    </main>
-  </div>
-
-  <!-- ====== SCRIPT ====== -->
-  <script src="../js/main.js"></script>
+    <script href="../css/main.js"></script>
 </body>
 </html>

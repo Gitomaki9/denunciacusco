@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notificaciones - Cusco Reporta</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/notificaciones.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <!-- ====== NAVBAR SUPERIOR ====== -->
   <header class="topbar">
     <div class="topbar__logo">
-      <img src="../assents/images/CuscoReporta.png" alt="Cusco Reporta Logo">
+      <img href="../css/images/CuscoReporta.png" alt="Cusco Reporta Logo">
     </div>
     <nav class="topbar__menu">
-      <a href="/../index">Inicio</a>
+      <a href="../index.html">Inicio</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
@@ -168,29 +168,6 @@
   </div>
 
   <!-- ====== SCRIPT ====== -->
-  <script>
-    document.getElementById("logoutBtn").addEventListener("click", function() {
-      if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-        alert("Sesión cerrada correctamente.");
-        window.location.href = "./index.html";
-      }
-    });
-
-    // Funcionalidad para marcar notificaciones como leídas
-    document.querySelectorAll('.btn-mark-read').forEach(button => {
-      button.addEventListener('click', function() {
-        const notificationItem = this.closest('.notification-item');
-        
-        // Cambiar a estado leído
-        notificationItem.style.backgroundColor = '#f8f9fa';
-        
-        // Cambiar el botón por texto "Leída"
-        const actions = notificationItem.querySelector('.notification-actions') || this.parentElement;
-        actions.innerHTML = '<span style="color: #28a745; font-weight: 500;">✓ Leída</span>';
-        
-        alert('Notificación marcada como leída');
-      });
-    });
-  </script>
+  <script href="../css/notificaciones.js"></script>
 </body>
 </html>
