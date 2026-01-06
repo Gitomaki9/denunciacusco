@@ -84,6 +84,14 @@
       background: #8b0000;
     }
     
+    .btn-register {
+      background: #4CAF50 !important;
+    }
+    
+    .btn-register:hover {
+      background: #388E3C !important;
+    }
+    
     .forgot-password {
       text-align: center;
       margin-top: 20px;
@@ -124,6 +132,42 @@
       color: #b22222;
       font-size: 18px;
     }
+    
+    .message {
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      text-align: center;
+      display: none;
+    }
+    
+    .message.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+    }
+    
+    .message.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -139,6 +183,7 @@
       <a href="/registrar_tu_denuncia">Registra tu denuncia</a>
       <a href="/sobre_nosotros">Sobre nosotros</a>
       <a href="/iniciar-sesion" style="background: #b22222; color: white; padding: 8px 16px; border-radius: 20px;">Iniciar Sesión</a>
+      <a href="#" onclick="mostrarRegistro(); return false;" style="background: #c43d3d; color: white; padding: 8px 16px; border-radius: 20px;">Registrarse</a>
       <a href="/ayuda">Ayuda</a>
     </nav>
   </header>
@@ -147,6 +192,9 @@
   <main class="main">
     <div class="login-container">
       <h1 style="text-align: center; color: #8b0000; margin-bottom: 30px;">INICIO DE SESIÓN</h1>
+
+      <!-- Mensajes de error/éxito -->
+      <div id="messageBox" class="message"></div>
 
       <!-- Tabs Login/Registro -->
       <div class="login-tabs">
@@ -166,7 +214,9 @@
           <input type="password" id="password" placeholder="Tu contraseña" required>
         </div>
         
-        <button type="submit" class="btn-login">Iniciar Sesión</button>
+        <button type="submit" class="btn-login" id="btnLogin">
+          <span id="btnLoginText">Iniciar Sesión</span>
+        </button>
         
         <div class="forgot-password">
           <a href="/recuperar_contrasena">¿Olvidaste tu contraseña?</a>
@@ -195,10 +245,12 @@
           <input type="password" id="regConfirmPassword" placeholder="Repite tu contraseña" required>
         </div>
         
-        <button type="submit" class="btn-login" style="background: #4CAF50;">Crear Cuenta</button>
+        <button type="submit" class="btn-login btn-register" id="btnRegister">
+          <span id="btnRegisterText">Crear Cuenta</span>
+        </button>
         
         <div class="register-prompt">
-          ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia Sesión</a>
+          ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin(); return false;">Inicia Sesión</a>
         </div>
       </form>
 
@@ -206,79 +258,238 @@
     </div>
   </main>
 
-  <script>
-    // Funciones para cambiar entre Login y Registro
+  <script type="module">
+    // ========== IMPORTAR SUPABASE ==========
+    import { supabase } from '../js/supabase.js'
+    
+    // ========== FUNCIONES DE INTERFAZ ==========
     function mostrarLogin() {
-      document.getElementById('formLogin').style.display = 'block';
-      document.getElementById('formRegistro').style.display = 'none';
-      document.getElementById('tabLogin').classList.add('active');
-      document.getElementById('tabRegistro').classList.remove('active');
+      document.getElementById('formLogin').style.display = 'block'
+      document.getElementById('formRegistro').style.display = 'none'
+      document.getElementById('tabLogin').classList.add('active')
+      document.getElementById('tabRegistro').classList.remove('active')
+      limpiarMensajes()
     }
     
     function mostrarRegistro() {
-      document.getElementById('formLogin').style.display = 'none';
-      document.getElementById('formRegistro').style.display = 'block';
-      document.getElementById('tabLogin').classList.remove('active');
-      document.getElementById('tabRegistro').classList.add('active');
+      document.getElementById('formLogin').style.display = 'none'
+      document.getElementById('formRegistro').style.display = 'block'
+      document.getElementById('tabLogin').classList.remove('active')
+      document.getElementById('tabRegistro').classList.add('active')
+      limpiarMensajes()
     }
     
-    // Manejo del formulario de LOGIN (sin Supabase por ahora)
-    document.getElementById('formLogin').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    function mostrarMensaje(texto, tipo = 'error') {
+      const messageBox = document.getElementById('messageBox')
+      messageBox.textContent = texto
+      messageBox.className = `message ${tipo}`
+      messageBox.style.display = 'block'
       
-      // Validación básica
+      if (tipo === 'success') {
+        setTimeout(() => {
+          messageBox.style.display = 'none'
+        }, 5000)
+      }
+    }
+    
+    function limpiarMensajes() {
+      document.getElementById('messageBox').style.display = 'none'
+    }
+    
+    function mostrarLoading(buttonId, isLoading) {
+      const button = document.getElementById(buttonId)
+      const textSpan = document.getElementById(buttonId + 'Text')
+      
+      if (isLoading) {
+        button.disabled = true
+        textSpan.innerHTML = '<span class="loading"></span> Procesando...'
+      } else {
+        button.disabled = false
+        if (buttonId === 'btnLogin') {
+          textSpan.textContent = 'Iniciar Sesión'
+        } else {
+          textSpan.textContent = 'Crear Cuenta'
+        }
+      }
+    }
+    
+    // ========== LOGIN REAL CON SUPABASE ==========
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
+      e.preventDefault()
+      
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+      
       if (!email || !password) {
-        alert('Por favor, completa todos los campos');
-        return;
+        mostrarMensaje('Por favor, completa todos los campos', 'error')
+        return
       }
       
-      // Simular login (remplazar con Supabase después)
-      alert('Login simulado. Email: ' + email + '\nImplementa Supabase para autenticación real.');
-      // Redirigir a perfil después de login
-      // window.location.href = '/perfil';
-    });
+      mostrarLoading('btnLogin', true)
+      
+      try {
+        // 🔐 LOGIN CON SUPABASE REAL
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        })
+        
+        if (error) {
+          mostrarMensaje('Error: ' + error.message, 'error')
+          mostrarLoading('btnLogin', false)
+          return
+        }
+        
+        // ✅ LOGIN EXITOSO
+        mostrarMensaje('✅ ¡Inicio de sesión exitoso! Redirigiendo...', 'success')
+        
+        // Crear perfil si no existe
+        if (data.user) {
+          try {
+            await supabase.from('perfiles').upsert({
+              id: data.user.id,
+              nombre_completo: data.user.user_metadata?.nombre || email.split('@')[0],
+              actualizado_en: new Date().toISOString()
+            })
+          } catch (profileError) {
+            console.log('Nota: Error al crear perfil:', profileError.message)
+          }
+        }
+        
+        // Redirigir después de 2 segundos
+        setTimeout(() => {
+          window.location.href = '/perfil'
+        }, 2000)
+        
+      } catch (error) {
+        console.error('Error:', error)
+        mostrarMensaje('Error inesperado: ' + error.message, 'error')
+        mostrarLoading('btnLogin', false)
+      }
+    })
     
-    // Manejo del formulario de REGISTRO
-    document.getElementById('formRegistro').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nombre = document.getElementById('regNombre').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      const confirmPassword = document.getElementById('regConfirmPassword').value;
+    // ========== REGISTRO REAL CON SUPABASE ==========
+    document.getElementById('formRegistro').addEventListener('submit', async function(e) {
+      e.preventDefault()
+      
+      const nombre = document.getElementById('regNombre').value.trim()
+      const email = document.getElementById('regEmail').value.trim()
+      const password = document.getElementById('regPassword').value
+      const confirmPassword = document.getElementById('regConfirmPassword').value
       
       // Validaciones
       if (!nombre || !email || !password || !confirmPassword) {
-        alert('Por favor, completa todos los campos');
-        return;
+        mostrarMensaje('Por favor, completa todos los campos', 'error')
+        return
       }
       
       if (password !== confirmPassword) {
-        alert('Las contraseñas no coinciden');
-        return;
+        mostrarMensaje('Las contraseñas no coinciden', 'error')
+        return
       }
       
       if (password.length < 6) {
-        alert('La contraseña debe tener al menos 6 caracteres');
-        return;
+        mostrarMensaje('La contraseña debe tener al menos 6 caracteres', 'error')
+        return
       }
       
-      // Simular registro (remplazar con Supabase después)
-      alert('Registro simulado exitoso:\nNombre: ' + nombre + '\nEmail: ' + email + '\n\nImplementa Supabase para registro real.');
+      if (!email.includes('@')) {
+        mostrarMensaje('Por favor, ingresa un email válido', 'error')
+        return
+      }
       
-      // Después de registro, mostrar formulario de login
-      mostrarLogin();
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = '';
-    });
+      mostrarLoading('btnRegister', true)
+      
+      try {
+        // 📝 REGISTRO CON SUPABASE REAL
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              nombre: nombre,
+              creado_en: new Date().toISOString()
+            },
+            emailRedirectTo: 'https://denunciacusqueno-git-main-gitomaki9s-projects.vercel.app/perfil'
+          }
+        })
+        
+        if (error) {
+          mostrarMensaje('Error: ' + error.message, 'error')
+          mostrarLoading('btnRegister', false)
+          return
+        }
+        
+        // ✅ REGISTRO EXITOSO
+        if (data.user) {
+          // Crear perfil en tabla 'perfiles'
+          try {
+            await supabase.from('perfiles').insert({
+              id: data.user.id,
+              nombre_completo: nombre,
+              creado_en: new Date().toISOString()
+            })
+          } catch (profileError) {
+            console.log('Nota: Error creando perfil:', profileError.message)
+          }
+        }
+        
+        mostrarMensaje(`✅ ¡Registro exitoso!<br><br>
+        Se ha enviado un correo de confirmación a: <strong>${email}</strong><br><br>
+        Por favor, verifica tu email para activar tu cuenta.`, 'success')
+        
+        // Limpiar formulario
+        this.reset()
+        
+        // Volver a login después de 5 segundos
+        setTimeout(() => {
+          mostrarLogin()
+          document.getElementById('email').value = email
+        }, 5000)
+        
+        mostrarLoading('btnRegister', false)
+        
+      } catch (error) {
+        console.error('Error:', error)
+        mostrarMensaje('Error inesperado: ' + error.message, 'error')
+        mostrarLoading('btnRegister', false)
+      }
+    })
     
-    // Si viene de registro exitoso, mostrar mensaje
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('registro') === 'exitoso') {
-      alert('¡Registro exitoso! Ahora inicia sesión.');
-      document.getElementById('email').value = urlParams.get('email') || '';
+    // ========== VERIFICAR SI YA ESTÁ LOGUEADO ==========
+    async function checkIfLoggedIn() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          // Si ya está logueado, redirigir al perfil
+          window.location.href = '/perfil'
+        }
+      } catch (error) {
+        console.log('Error verificando sesión:', error.message)
+      }
     }
+    
+    // ========== INICIALIZAR ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      checkIfLoggedIn()
+      
+      // Verificar parámetros de URL
+      const urlParams = new URLSearchParams(window.location.search)
+      if (urlParams.get('error')) {
+        mostrarMensaje(decodeURIComponent(urlParams.get('error')), 'error')
+      }
+      if (urlParams.get('message')) {
+        mostrarMensaje(decodeURIComponent(urlParams.get('message')), 'success')
+      }
+      if (urlParams.get('registro') === 'exitoso') {
+        mostrarMensaje('¡Registro exitoso! Ahora inicia sesión.', 'success')
+      }
+    })
+    
+    // Hacer funciones globales para el menú
+    window.mostrarLogin = mostrarLogin
+    window.mostrarRegistro = mostrarRegistro
   </script>
   
   <script src="../js/main.js"></script>
